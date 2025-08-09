@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DevOps Portfolio - [Your Name]</title>
+    <!-- Minimal inline styles for basic structure, layout, and touch targets. -->
+    <!-- In a real project, this would be in an external CSS file. -->
+    <style>
+      /* Basic Resets & Typography */
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+          "Segoe UI Symbol";
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa; /* Use a light, neutral background */
+      }
+
+      /* === Mobile-First Responsive Layout === */
+      .portfolio-container {
+        display: flex;
+        flex-direction: column; /* Default stack for mobile */
+        min-height: 100vh;
+      }
+
+      /* --- Main Content Area --- */
+      main {
+        flex-grow: 1;
+        padding: 1rem 1rem 6rem 1rem; /* Add bottom padding to avoid overlap with mobile nav */
+      }
+
+      /* --- Desktop & Tablet Layout Adjustments --- */
+      @media (min-width: 768px) {
+        .portfolio-container {
+          flex-direction: row; /* Side-by-side layout for larger screens */
+        }
+        main {
+          padding: 2rem; /* Adjust padding for larger screens */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="portfolio-container">
+      <!-- 
+            UX Intent: Sidebar Navigation (Desktop) / Header (Mobile)
+            - On desktop, this is a persistent vertical navigation bar for quick access to all sections.
+            - On mobile, this transforms into a simple header, as primary navigation moves to the bottom.
+            - It is placed before <main> in the DOM for accessibility and logical content flow.
+        -->
+      <header class="portfolio-header-nav" role="banner">
+        <!-- UX Intent: Site Identity and Mobile Menu Toggle -->
+        <div class="site-identity">
+          <h1>[Your Name]'s Living Portfolio</h1>
+          <!-- This button would be hidden on desktop and control a slide-out menu for secondary links -->
+          <button aria-label="Open secondary menu" class="mobile-menu-toggle">
+            Menu
+          </button>
+        </div>
+
+        <!-- 
+                UX Intent: Primary Navigation
+                - On desktop, this is a visible list of links in the sidebar.
+                - On mobile, this entire <nav> block would be visually hidden, with its functionality replaced by the <footer> navigation bar for better ergonomics.
+            -->
+        <nav id="primary-navigation" role="navigation" aria-label="Primary">
+          <ul>
+            <li><a href="#about">About Me</a></li>
+            <li><a href="#cluster">Kubernetes Cluster</a></li>
+            <li><a href="#monitoring">Monitoring</a></li>
+            <li><a href="#gitops">GitOps & CI/CD</a></li>
+            <li><a href="#provisioning">Ansible Provisioning</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <!-- 
+            UX Intent: Main Content Area
+            - This is the primary container for the content of each section.
+            - It will be dynamically updated or scrolled to, based on user interaction.
+        -->
+      <main id="main-content">
+        <!-- ====================================================================== -->
+        <!-- SECTION 1: ABOUT ME                                                      -->
+        <!-- UX Intent: A clear, concise introduction to the professional.         -->
+        <!-- ====================================================================== -->
+        <section id="about" role="region" aria-labelledby="about-heading">
+          <h2 id="about-heading">About Me</h2>
+          <p>
+            A brief, professional summary goes here. Introduce your expertise
+            and passion for DevOps, automation, and cloud-native technologies.
+          </p>
+
+          <h3>Core Skills</h3>
+          <ul>
+            <li>Cloud Platforms: AWS, GCP, Azure</li>
+            <li>Containerization: Docker, Kubernetes, Helm</li>
+            <li>CI/CD: Jenkins, GitLab CI, ArgoCD</li>
+            <li>Infrastructure as Code: Terraform, Ansible</li>
+            <li>Monitoring: Prometheus, Grafana, ELK Stack</li>
+          </ul>
+
+          <h3>Contact</h3>
+          <address>
+            <a href="mailto:you@example.com">you@example.com</a><br />
+            <a href="https://linkedin.com/in/yourprofile">LinkedIn</a><br />
+            <a href="https://github.com/yourprofile">GitHub</a>
+          </address>
+        </section>
+
+        <!-- ====================================================================== -->
+        <!-- SECTION 2: KUBERNETES CLUSTER                                          -->
+        <!-- UX Intent: An interactive, visual representation of the live cluster.  -->
+        <!-- ====================================================================== -->
+        <section id="cluster" role="region" aria-labelledby="cluster-heading">
+          <h2 id="cluster-heading">Live Kubernetes Cluster</h2>
+          <p>
+            This portfolio is running on a K3s cluster. The diagram below is a
+            live, interactive representation of its state.
+          </p>
+
+          <!-- 
+                    UX Intent: Interactive Map Container
+                    - role="application" tells screen readers this is a complex interactive widget.
+                    - Touch: Pinch-to-zoom, drag-to-pan.
+                    - Mouse: Scroll-to-zoom, click-and-drag-to-pan.
+                    - Keyboard: Arrow keys to pan, +/- to zoom, Tab to navigate nodes.
+                -->
+          <div
+            class="interactive-map-container"
+            role="application"
+            aria-label="Kubernetes Cluster Map"
+          >
+            <!-- Placeholder for the JS-rendered SVG map -->
+            <div
+              id="kube-map-visualizer"
+              style="
+                min-height: 400px;
+                border: 1px dashed #ccc;
+                background-color: #fff;
+              "
+            >
+              <!-- JS will populate this with SVG elements for nodes, pods, etc. -->
+            </div>
+          </div>
+
+          <!-- 
+                    UX Intent: Information Panel
+                    - This panel is updated when a user selects an element on the map.
+                    - aria-live="polite" ensures screen readers announce content changes gracefully.
+                -->
+          <aside
+            class="info-panel"
+            aria-live="polite"
+            aria-labelledby="info-panel-heading"
+          >
+            <h3 id="info-panel-heading">Cluster Details</h3>
+            <div id="cluster-info-content">
+              <p>Select an element on the map to see its details here.</p>
+              <!-- Example content on selection:
+                        <h4>Node: worker-node-1</h4>
+                        <p>Status: Ready</p>
+                        <p>IP: 192.168.1.101</p>
+                        -->
+            </div>
+          </aside>
+        </section>
+
+        <!-- ====================================================================== -->
+        <!-- SECTION 3: MONITORING (GRAFANA)                                        -->
+        <!-- UX Intent: A dashboard of key performance and health metrics.        -->
+        <!-- ====================================================================== -->
+        <section
+          id="monitoring"
+          role="region"
+          aria-labelledby="monitoring-heading"
+        >
+          <h2 id="monitoring-heading">Live Monitoring</h2>
+          <p>
+            Metrics are scraped by Prometheus and visualized here via Grafana.
+            Data is near-real-time.
+          </p>
+
+          <!-- 
+                    UX Intent: Dashboard Layout
+                    - A grid layout is perfect for a dashboard. It's responsive and adapts well.
+                    - Each metric is a self-contained <article>.
+                -->
+          <div class="dashboard-grid">
+            <article class="dashboard-panel" aria-labelledby="panel1-title">
+              <h3 id="panel1-title">CPU Utilization</h3>
+              <!-- Placeholder for an embedded Grafana panel or a custom chart -->
+              <div
+                class="chart-placeholder"
+                style="
+                  min-height: 200px;
+                  border: 1px solid #eee;
+                  background-color: #fff;
+                "
+              ></div>
+            </article>
+            <article class="dashboard-panel" aria-labelledby="panel2-title">
+              <h3 id="panel2-title">Memory Usage</h3>
+              <div
+                class="chart-placeholder"
+                style="
+                  min-height: 200px;
+                  border: 1px solid #eee;
+                  background-color: #fff;
+                "
+              ></div>
+            </article>
+            <article class="dashboard-panel" aria-labelledby="panel3-title">
+              <h3 id="panel3-title">API Server Latency</h3>
+              <div
+                class="chart-placeholder"
+                style="
+                  min-height: 200px;
+                  border: 1px solid #eee;
+                  background-color: #fff;
+                "
+              ></div>
+            </article>
+          </div>
+        </section>
+
+        <!-- ====================================================================== -->
+        <!-- SECTION 4: GITOPS & CI/CD                                              -->
+        <!-- UX Intent: Show the live status of the Git repo and deployment flow. -->
+        <!-- ====================================================================== -->
+        <section id="gitops" role="region" aria-labelledby="gitops-heading">
+          <h2 id="gitops-heading">GitOps Workflow</h2>
+          <p>
+            This site is deployed automatically via a GitOps workflow. Pushing
+            to the `main` branch triggers an update.
+          </p>
+
+          <!-- 
+                    UX Intent: Dynamic Status Area
+                    - This area will be updated via API calls to the Git provider.
+                    - aria-live="polite" will announce updates to screen readers.
+                -->
+          <div class="git-status-container" aria-live="polite">
+            <h3>Repository Status</h3>
+            <p>
+              <strong>Repo:</strong>
+              <a href="#your-repo-link" target="_blank">your-repo/portfolio</a>
+            </p>
+            <p><strong>Current Branch:</strong> main</p>
+            <p>
+              <strong>Last Commit:</strong>
+              <span id="last-commit-hash">...</span> - "<span
+                id="last-commit-message"
+                >...</span
+              >"
+            </p>
+            <p>
+              <strong>Sync Status:</strong>
+              <span id="argocd-status">Synced</span>
+            </p>
+          </div>
+
+          <h3>CI/CD Pipeline Visualization</h3>
+          <!-- UX Intent: A simplified flow diagram that is accessible. -->
+          <ol class="pipeline-visualizer">
+            <li class="pipeline-step complete"><span>Git Push</span></li>
+            <li class="pipeline-step active">
+              <span>Build & Push Image</span>
+            </li>
+            <li class="pipeline-step"><span>Update Manifest</span></li>
+            <li class="pipeline-step"><span>Sync with ArgoCD</span></li>
+            <li class="pipeline-step"><span>Deploy</span></li>
+          </ol>
+        </section>
+
+        <!-- ====================================================================== -->
+        <!-- SECTION 5: PROVISIONING (ANSIBLE)                                      -->
+        <!-- UX Intent: Explain the setup process with clear code examples.       -->
+        <!-- ====================================================================== -->
+        <section
+          id="provisioning"
+          role="region"
+          aria-labelledby="provisioning-heading"
+        >
+          <h2 id="provisioning-heading">Ansible Provisioning</h2>
+          <p>
+            The underlying nodes and cluster configuration were provisioned
+            using Ansible. Below are key excerpts from the playbooks.
+          </p>
+
+          <!-- 
+                    UX Intent: Collapsible Code Blocks (Progressive Disclosure)
+                    - <details> and <summary> are semantic, accessible elements for accordions.
+                    - Users can view a summary and choose to expand for the full code block.
+                -->
+          <details>
+            <summary><strong>Playbook: Initial Node Setup</strong></summary>
+            <pre><code>---
+- name: Configure base server
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+...</code></pre>
+          </details>
+
+          <details>
+            <summary>
+              <strong>Playbook: K3s Cluster Installation</strong>
+            </summary>
+            <pre><code>---
+- name: Install K3s cluster
+  hosts: master
+  become: yes
+  tasks:
+    - name: Install K3s from script
+      shell: "curl -sfL https://get.k3s.io | sh -"
+      args:
+        creates: /usr/local/bin/k3s
+...</code></pre>
+          </details>
+        </section>
+      </main>
+
+      <!-- 
+            UX Intent: Mobile-First Bottom Navigation Bar
+            - This is the primary navigation on small screens for ergonomic touch access.
+            - It is visually hidden on larger screens (tablets/desktops) where the sidebar <nav> becomes primary.
+            - Using a <footer> is semantically appropriate for this type of app-shell navigation.
+        -->
+      <footer class="mobile-bottom-nav" role="navigation" aria-label="Primary">
+        <a href="#about" class="nav-item">About</a>
+        <a href="#cluster" class="nav-item">Cluster</a>
+        <a href="#monitoring" class="nav-item">Metrics</a>
+        <a href="#gitops" class="nav-item">GitOps</a>
+        <a href="#provisioning" class="nav-item">Ansible</a>
+      </footer>
+    </div>
+  </body>
+</html>

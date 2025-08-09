@@ -1,0 +1,588 @@
+import React from "react";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { RocketIcon } from "@radix-ui/react-icons";
+
+function About() {
+  return (
+    <section id="about" className="py-16" aria-labelledby="about-heading">
+      <h2 id="about-heading" className="text-3xl font-bold tracking-tight">
+        About Me
+      </h2>
+      <Alert className="mt-4">
+        <RocketIcon className="h-4 w-4" />
+        <AlertTitle>Passionate DevOps Engineer</AlertTitle>
+        <AlertDescription>
+          I specialize in building resilient, scalable, and automated
+          infrastructure. My expertise lies in container orchestration,
+          infrastructure as code, and creating robust CI/CD pipelines that
+          empower development teams to ship code with confidence.
+        </AlertDescription>
+      </Alert>
+
+      <h3 className="text-2xl font-bold mt-12">Core Competencies</h3>
+      <div className="mt-4 space-y-6">
+        <div>
+          <h4 className="font-semibold text-lg">Cloud Platforms</h4>
+          <div className="flex flex-wrap gap-2 mt-2">
+            <Badge>AWS</Badge>
+            <Badge>Google Cloud Platform (GCP)</Badge>
+            <Badge>Azure</Badge>
+          </div>
+        </div>
+        <div>
+          <h4 className="font-semibold text-lg">
+            Containerization & Orchestration
+          </h4>
+          <div className="flex flex-wrap gap-2 mt-2">
+            <Badge>Docker</Badge>
+            <Badge>Kubernetes (K8s)</Badge>
+            <Badge>Helm</Badge>
+            <Badge>Kustomize</Badge>
+          </div>
+        </div>
+        <div>
+          <h4 className="font-semibold text-lg">CI/CD & GitOps</h4>
+          <div className="flex flex-wrap gap-2 mt-2">
+            <Badge>GitLab CI</Badge>
+            <Badge>GitHub Actions</Badge>
+            <Badge>Jenkins</Badge>
+            <Badge>ArgoCD</Badge>
+            <Badge>Flux</Badge>
+          </div>
+        </div>
+        <div>
+          <h4 className="font-semibold text-lg">
+            Infrastructure as Code (IaC)
+          </h4>
+          <div className="flex flex-wrap gap-2 mt-2">
+            <Badge>Terraform</Badge>
+            <Badge>Ansible</Badge>
+            <Badge>Pulumi</Badge>
+          </div>
+        </div>
+        <div>
+          <h4 className="font-semibold text-lg">Monitoring & Observability</h4>
+          <div className="flex flex-wrap gap-2 mt-2">
+            <Badge>Prometheus</Badge>
+            <Badge>Grafana</Badge>
+            <Badge>Loki</Badge>
+            <Badge>ELK Stack</Badge>
+          </div>
+        </div>
+        <div>
+          <h4 className="font-semibold text-lg">Scripting</h4>
+          <div className="flex flex-wrap gap-2 mt-2">
+            <Badge>Bash</Badge>
+            <Badge>Python</Badge>
+            <Badge>Go</Badge>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-12">
+        <Button asChild size="lg">
+          <a href="/path-to-your-resume.pdf" download>
+            Download My Resume
+          </a>
+        </Button>
+      </div>
+    </section>
+  );
+}
+
+export default About;import React from "react";
+import { Button } from "./ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+
+function Ansible() {
+  return (
+    <section id="provisioning" className="py-16" aria-labelledby="provisioning-heading">
+      <h2 id="provisioning-heading" className="text-3xl font-bold tracking-tight">
+        Infrastructure as Code with Ansible
+      </h2>
+      <p className="mt-4 text-muted-foreground">
+        The virtual machine nodes for this cluster were provisioned and
+        configured entirely through code using Ansible. This ensures the setup
+        is repeatable, consistent, and easy to modify or rebuild.
+      </p>
+
+      <Tabs defaultValue="base" className="w-full mt-8">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="base">Base Node Config</TabsTrigger>
+          <TabsTrigger value="k3s">K3s Cluster Install</TabsTrigger>
+        </TabsList>
+        <TabsContent value="base">
+          <p className="p-4 text-muted-foreground">
+            This playbook runs on all nodes to set up users, update packages,
+            and install common dependencies like Docker.
+          </p>
+          <pre className="mt-2 p-4 bg-muted rounded-lg overflow-x-auto">
+            <code>
+              {`---
+- name: Configure base server
+  hosts: all
+  become: yes
+  tasks:
+    - name: Ensure apt cache is updated
+      apt:
+        update_cache: yes
+...`}
+            </code>
+          </pre>
+        </TabsContent>
+        <TabsContent value="k3s">
+          <p className="p-4 text-muted-foreground">
+            This playbook initializes the K3s master node and then has worker
+            nodes join the cluster.
+          </p>
+          <pre className="mt-2 p-4 bg-muted rounded-lg overflow-x-auto">
+            <code>
+              {`---
+- name: Install K3s master
+  hosts: master
+  become: yes
+  tasks:
+    - name: Get K3s installation script
+      get_url:
+        url: https://get.k3s.io
+        dest: /tmp/install_k3s.sh
+        mode: '0755'
+...`}
+            </code>
+          </pre>
+        </TabsContent>
+      </Tabs>
+
+      <div className="mt-8 text-center">
+        <Button asChild>
+          <a
+            href="https://github.com/your-repo/ansible-playbooks"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View All Ansible Playbooks on GitHub
+          </a>
+        </Button>
+      </div>
+    </section>
+  );
+}
+
+export default Ansible;import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import { Badge } from "./ui/badge";
+
+function GitOps() {
+  return (
+    <section id="gitops" className="py-16" aria-labelledby="gitops-heading">
+      <h2 id="gitops-heading" className="text-3xl font-bold tracking-tight">
+        GitOps Workflow with ArgoCD
+      </h2>
+      <p className="mt-4 text-muted-foreground">
+        This site is deployed using a GitOps approach. The Kubernetes manifests
+        are stored in a Git repository, which acts as the single source of
+        truth. ArgoCD monitors this repository and automatically syncs any
+        changes to the live cluster, ensuring the deployed state matches the
+        desired state in Git.
+      </p>
+
+      <div className="mt-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Live Deployment Status</CardTitle>
+            <CardDescription>
+              Real-time status from the ArgoCD application controller.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[200px]">Property</TableHead>
+                  <TableHead>Value</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium">
+                    Source Repository
+                  </TableCell>
+                  <TableCell>
+                    <a
+                      href="https://github.com/your-repo/portfolio-manifests"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      portfolio-manifests
+                    </a>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">
+                    ArgoCD Sync Status
+                  </TableCell>
+                  <TableCell>
+                    <Badge className="bg-green-500 hover:bg-green-600">
+                      Synced
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">
+                    Target Revision
+                  </TableCell>
+                  <TableCell>HEAD</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">
+                    Last Synced Commit
+                  </TableCell>
+                  <TableCell>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <a href="#" className="text-primary hover:underline">
+                            a1b2c3d
+                          </a>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>View commit details</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
+    </section>
+  );
+}
+
+export default GitOps;"use client";
+
+import React from "react";
+import { useTheme } from "next-themes";
+import { Switch } from "./ui/switch";
+import { Label } from "./ui/label";
+import { SunIcon, MoonIcon } from "@radix-ui/react-icons";
+
+function Header() {
+  const { theme, setTheme } = useTheme();
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 max-w-screen-2xl items-center justify-between">
+        <a href="#hero" className="font-bold">
+          DevOps Portfolio
+        </a>
+        <div className="flex items-center space-x-2">
+          <SunIcon />
+          <Switch
+            id="theme-switch"
+            checked={theme === "dark"}
+            onCheckedChange={() => setTheme(theme === "dark" ? "light" : "dark")}
+            aria-label="Toggle theme"
+          />
+          <MoonIcon />
+        </div>
+      </div>
+    </header>
+  );
+}
+
+export default Header;import React from "react";
+
+function Hero() {
+  return (
+    <section
+      id="hero"
+      className="text-center py-16 px-4 bg-background"
+      aria-labelledby="hero-heading"
+    >
+      <h1 id="hero-heading" className="text-4xl font-bold tracking-tight">
+        A Living DevOps Portfolio
+      </h1>
+      <p className="max-w-2xl mx-auto mt-4 text-lg text-muted-foreground">
+        This website is a live demonstration of my cloud-native skills, running
+        on a Kubernetes cluster I built, automated, and monitor.
+      </p>
+      <p className="max-w-2xl mx-auto mt-4 text-lg text-muted-foreground">
+        Explore the sections below to see exactly how it works, from
+        infrastructure provisioning to live monitoring.
+      </p>
+    </section>
+  );
+}
+
+export default Hero;
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { Skeleton } from "./ui/skeleton";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
+
+function KubernetesCluster() {
+  // Set to true to see the skeleton loading state
+  const isLoading = true;
+
+  return (
+    <section id="cluster" className="py-16" aria-labelledby="cluster-heading">
+      <h2 id="cluster-heading" className="text-3xl font-bold tracking-tight">
+        Live Kubernetes Cluster
+      </h2>
+      <p className="mt-4 text-muted-foreground">
+        This portfolio is running on a lightweight K3s cluster. The diagram
+        below is a live, interactive representation of its state, populated by
+        data from the Kubernetes API server.
+      </p>
+
+      <div className="mt-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Kubernetes Cluster Map</CardTitle>
+            <CardDescription>
+              Controls: Mouse: Click/Drag to Pan, Scroll to Zoom | Keyboard:
+              Arrow Keys to Pan, +/- to Zoom, Tab to select elements, Enter to
+              view details.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <div className="flex items-center justify-center rounded-lg border border-dashed p-8">
+                <div className="space-y-4 text-center">
+                  <Skeleton className="mx-auto h-12 w-12 rounded-full" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-[250px]" />
+                    <Skeleton className="h-4 w-[200px]" />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="min-h-[400px] border border-dashed flex items-center justify-center rounded-lg">
+                {/* Your interactive cluster map component would go here */}
+                <p className="text-muted-foreground">Cluster Map Loaded</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <aside className="mt-8">
+        <Alert>
+          <InfoCircledIcon className="h-4 w-4" />
+          <AlertTitle>Cluster Information</AlertTitle>
+          <AlertDescription>
+            <ul className="list-disc list-inside mt-2 space-y-1">
+              <li>
+                <strong>Cluster Status:</strong>{" "}
+                <span className="text-green-500">Active</span>
+              </li>
+              <li>
+                <strong>Total Nodes:</strong> 3 (1 Master, 2 Workers)
+              </li>
+              <li>
+                <strong>Total Pods Running:</strong> 12
+              </li>
+            </ul>
+          </AlertDescription>
+        </Alert>
+      </aside>
+    </section>
+  );
+}
+
+export default KubernetesCluster;import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Button } from "./ui/button";
+import { Skeleton } from "./ui/skeleton";
+
+function Monitoring() {
+  // Set to true to see the skeleton loading state
+  const isLoading = true;
+
+  return (
+    <section
+      id="monitoring"
+      className="py-16"
+      aria-labelledby="monitoring-heading"
+    >
+      <h2 id="monitoring-heading" className="text-3xl font-bold tracking-tight">
+        Live Monitoring
+      </h2>
+      <p className="mt-4 text-muted-foreground">
+        The cluster's health and performance are monitored by a Prometheus
+        instance, with key metrics visualized here using embedded Grafana
+        panels. The data is updated approximately every 60 seconds.
+      </p>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Cluster CPU Utilization</CardTitle>
+            <CardDescription>Total CPU usage across all nodes.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <Skeleton className="h-[200px] w-full" />
+            ) : (
+              <div className="min-h-[200px] border flex items-center justify-center rounded-lg">
+                {/* Your Grafana panel embed would go here */}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Cluster Memory Usage</CardTitle>
+            <CardDescription>
+              Total memory consumption across all nodes.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <Skeleton className="h-[200px] w-full" />
+            ) : (
+              <div className="min-h-[200px] border flex items-center justify-center rounded-lg">
+                {/* Your Grafana panel embed would go here */}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="mt-8 text-center">
+        <Button asChild>
+          <a
+            href="https://your-grafana-instance.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Full Grafana Dashboard
+          </a>
+        </Button>
+      </div>
+    </section>
+  );
+}
+
+export default Monitoring;import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+
+function Navigation() {
+  return (
+    <nav aria-label="Portfolio Sections" className="py-12 px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <a href="#about">
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle>About Me</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                My professional background, core skills, and how to get in
+                touch.
+              </CardDescription>
+            </CardContent>
+          </Card>
+        </a>
+        <a href="#cluster">
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle>Live Kubernetes Cluster</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                An interactive map of the K3s cluster this portfolio is running
+                on.
+              </CardDescription>
+            </CardContent>
+          </Card>
+        </a>
+        <a href="#monitoring">
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle>Live Monitoring</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                See real-time performance metrics from Prometheus and Grafana.
+              </CardDescription>
+            </CardContent>
+          </Card>
+        </a>
+        <a href="#gitops">
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle>GitOps & CI/CD</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                View the repository status and the automated GitOps deployment
+                workflow.
+              </CardDescription>
+            </CardContent>
+          </Card>
+        </a>
+        <a href="#provisioning">
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle>Ansible Provisioning</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Learn how the infrastructure was configured and provisioned with
+                Ansible.
+              </CardDescription>
+            </CardContent>
+          </Card>
+        </a>
+      </div>
+    </nav>
+  );
+}
+
+export default Navigation;
