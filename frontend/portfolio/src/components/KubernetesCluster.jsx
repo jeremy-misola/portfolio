@@ -159,7 +159,7 @@ export default function KubernetesClusterSection() {
   }, [k8sData]);
 
   return (
-    <section id="kubernetes-cluster" className="py-16 sm:py-20 bg-muted/20">
+    <section id="cluster" className="py-16 sm:py-20 bg-muted/20 scroll-mt-24">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Live Cluster Explorer</h2>

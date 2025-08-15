@@ -83,7 +83,7 @@ function NavItem({ href, title, description, icon, className = "" }) {
 function Navigation() {
   return (
     <section id="navigation" className="py-24" aria-labelledby="navigation-heading">
-      <h2 id="navigation-heading" className="text-center text-4xl font-cal tracking-tight mb-12">
+      <h2 id="navigation-heading" className="text-center text-4xl font-bold tracking-tight mb-12">
         Explore the Stack
       </h2>
       <motion.div

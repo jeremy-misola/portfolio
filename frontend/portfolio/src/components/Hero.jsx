@@ -14,7 +14,7 @@ function Hero() {
     >
       <motion.h1
         id="hero-heading"
-        className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight font-cal"
+        className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight font-sans leading-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -51,7 +51,7 @@ function Hero() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.6 }}
       >
-        <div className="w-full max-w-4xl h-full bg-grid-black/[0.05] dark:bg-grid-white/[0.05] border rounded-lg flex items-center justify-center">
+        <div className="w-full max-w-4xl h-full bg-grid-black/[0.05] dark:bg-grid-white/[0.05] border rounded-xl shadow-lg flex items-center justify-center">
             <p className="text-muted-foreground">
                 [Interactive Globe/Cluster Visualization Here]
             </p>

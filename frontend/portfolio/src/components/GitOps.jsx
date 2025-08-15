@@ -119,6 +119,7 @@ const cicdPipelineEdges = [
 
 export default function GitOpsShowcase() {
     return (
+        <section id="gitops" className="w-full scroll-mt-24">
         <Card className="w-full" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
             <CardHeader>
                 <CardTitle className="text-3xl font-bold flex items-center"><Layers style={{ color: 'var(--primary)' }} className="mr-2 h-8 w-8" /> My DevOps Workflow</CardTitle>
@@ -237,5 +238,6 @@ export default function GitOpsShowcase() {
                 </Tabs>
             </CardContent>
         </Card>
+        </section>
     );
 }

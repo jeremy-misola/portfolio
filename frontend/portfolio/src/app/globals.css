@@ -188,3 +188,13 @@
     letter-spacing: var(--tracking-normal);
   }
 }
+
+/* Smooth scroll for in-page navigation */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Subtle container width and rhythm helpers */
+.container {
+  max-width: 1200px;
+}

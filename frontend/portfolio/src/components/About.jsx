@@ -76,7 +76,8 @@ const PhilosophyItem = ({ icon, title, description }) => (
 const AboutMe = () => {
   return (
     <motion.section 
-      className="bg-background text-foreground py-24 md:py-32"
+      id="about"
+      className="bg-background text-foreground py-24 md:py-32 scroll-mt-24"
       initial="hidden"
       animate="visible"
       variants={animations.container}

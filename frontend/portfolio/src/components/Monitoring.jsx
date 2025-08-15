@@ -106,7 +106,7 @@ export default function MonitoringDashboardWithTabs() {
   const outlineBadgeStyle = { border: '1px solid var(--border)', color: 'var(--foreground)' };
 
   return (
-    <section className="p-4 md:p-8" style={{ backgroundColor: 'var(--background)' }}>
+    <section id="monitoring" className="p-4 md:p-8 scroll-mt-24" style={{ backgroundColor: 'var(--background)' }}>
       <div className="container mx-auto">
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold tracking-tight" style={{ color: 'var(--foreground)' }}>Live Operations Dashboard</h2>

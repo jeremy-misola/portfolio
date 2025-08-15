@@ -93,7 +93,7 @@ const CodeBlock = ({ children }) => (
 // --- Main Component ---
 export default function Ansible() {
   return (
-    <section id="ansible" className="w-full bg-background py-16 md:py-24">
+    <section id="provisioning" className="w-full bg-background py-16 md:py-24 scroll-mt-24">
       <div className="container mx-auto max-w-5xl px-4">
         {/* Header */}
         <div className="mb-12 text-center">
