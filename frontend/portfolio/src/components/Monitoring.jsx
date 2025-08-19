@@ -1,5 +1,4 @@
 "use client";
-import { useState, useEffect } from 'react';
 import {
   AreaChart, Area, BarChart, Bar, ComposedChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
@@ -8,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip as ShadTooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Server, ShieldCheck, Info, LayoutGrid, LineChart as LineChartIcon, Database, AlertCircle, TrafficCone, FileClock } from 'lucide-react';
+import { Server, ShieldCheck, Info, LayoutGrid, LineChart as LineChartIcon, Activity, AlertCircle, TrafficCone, FileClock } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
@@ -31,13 +30,29 @@ const mockApiData = {
     { name: '/api/contact', value: 95, fill: 'var(--chart-3)' },
     { name: '/api/infra/status', value: 315, fill: 'var(--chart-4)' },
   ],
-  databasePerformance: [
-    { time: '11:00', connections: 30, slowQueries: 2, commits: 150, rollbacks: 5 }, 
-    { time: '11:05', connections: 32, slowQueries: 1, commits: 160, rollbacks: 2 },
-    { time: '11:10', connections: 35, slowQueries: 4, commits: 145, rollbacks: 8 }, 
-    { time: '11:15', connections: 33, slowQueries: 2, commits: 155, rollbacks: 3 },
-    { time: '11:20', connections: 38, slowQueries: 3, commits: 170, rollbacks: 6 }, 
-    { time: '11:25', connections: 40, slowQueries: 1, commits: 180, rollbacks: 4 },
+  // Monitoring-only new metrics (mocked)
+  sloBurn: [
+    { time: '10:00', burn1h: 0.8, burn6h: 0.6 },
+    { time: '10:10', burn1h: 1.2, burn6h: 0.7 },
+    { time: '10:20', burn1h: 0.9, burn6h: 0.8 },
+    { time: '10:30', burn1h: 1.6, burn6h: 1.0 },
+    { time: '10:40', burn1h: 0.7, burn6h: 0.9 },
+    { time: '10:50', burn1h: 2.4, burn6h: 1.4 },
+  ],
+  uptimeChecks: [
+    { region: 'US-East', uptime: 99.98 },
+    { region: 'US-West', uptime: 99.95 },
+    { region: 'EU', uptime: 99.97 },
+    { region: 'APAC', uptime: 99.92 },
+  ],
+  alertVolume: [
+    { day: 'Mon', critical: 1, warning: 3, info: 5 },
+    { day: 'Tue', critical: 0, warning: 2, info: 4 },
+    { day: 'Wed', critical: 2, warning: 4, info: 6 },
+    { day: 'Thu', critical: 0, warning: 1, info: 3 },
+    { day: 'Fri', critical: 3, warning: 5, info: 7 },
+    { day: 'Sat', critical: 0, warning: 0, info: 2 },
+    { day: 'Sun', critical: 0, warning: 1, info: 2 },
   ],
   networkPolicies: [
     { name: 'default-deny-all', status: 'Active', enforces: 'Ingress/Egress' },
@@ -124,7 +139,7 @@ export default function MonitoringDashboardWithTabs() {
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
             <TabsTrigger value="application"><LineChartIcon className="w-4 h-4 mr-2"/>Application</TabsTrigger>
             <TabsTrigger value="infrastructure"><LayoutGrid className="w-4 h-4 mr-2"/>Infrastructure</TabsTrigger>
-            <TabsTrigger value="database"><Database className="w-4 h-4 mr-2"/>Database</TabsTrigger>
+            <TabsTrigger value="reliability"><Activity className="w-4 h-4 mr-2"/>Reliability</TabsTrigger>
             <TabsTrigger value="events"><FileClock className="w-4 h-4 mr-2"/>Events</TabsTrigger>
           </TabsList>
           
@@ -205,26 +220,74 @@ export default function MonitoringDashboardWithTabs() {
             </div>
           </TabsContent>
 
-          <TabsContent value="database">
-            <Card className="mt-6" style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
-              <CardHeader><CardTitle>Database Performance</CardTitle><CardDescription style={{ color: 'var(--muted-foreground)' }}>Connections, slow queries, and transaction rates.</CardDescription></CardHeader>
-              <CardContent className="h-[400px] w-full">
+          <TabsContent value="reliability">
+            <div className="grid gap-6 mt-6 md:grid-cols-5">
+              <Card className="md:col-span-3" style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
+                <CardHeader>
+                  <CardTitle>Error Budget Burn</CardTitle>
+                  <CardDescription style={{ color: 'var(--muted-foreground)' }}>
+                    Fast (1h) vs Slow (6h) burn rates. Watch for spikes over 2x.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="h-[350px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={apiData.databasePerformance}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                        <XAxis dataKey="time" stroke="var(--muted-foreground)" />
-                        <YAxis yAxisId="left" label={{ value: 'Count', angle: -90, position: 'insideLeft', fill: 'var(--muted-foreground)' }} stroke="var(--muted-foreground)" />
-                        <YAxis yAxisId="right" orientation="right" label={{ value: 'Transactions', angle: -90, position: 'insideRight', fill: 'var(--muted-foreground)' }} stroke="var(--muted-foreground)" />
-                        <Tooltip content={<CustomTooltip />} />
-                        <Legend wrapperStyle={{ color: 'var(--foreground)' }} />
-                        <Bar yAxisId="left" dataKey="slowQueries" name="Slow Queries" fill="var(--destructive)" />
-                        <Line yAxisId="left" type="monotone" dataKey="connections" name="Connections" stroke="var(--primary)" strokeWidth={2}/>
-                        <Line yAxisId="right" type="monotone" dataKey="commits" name="Commits/min" stroke="var(--chart-2)" strokeWidth={2} />
-                        <Line yAxisId="right" type="monotone" dataKey="rollbacks" name="Rollbacks/min" stroke="var(--chart-5)" strokeDasharray="5 5" strokeWidth={2} />
+                    <ComposedChart data={apiData.sloBurn}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                      <XAxis dataKey="time" stroke="var(--muted-foreground)" />
+                      <YAxis stroke="var(--muted-foreground)" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend wrapperStyle={{ color: 'var(--foreground)' }} />
+                      <Line type="monotone" dataKey="burn1h" name="1h Burn" stroke="var(--destructive)" strokeWidth={2} />
+                      <Line type="monotone" dataKey="burn6h" name="6h Burn" stroke="var(--chart-4)" strokeWidth={2} strokeDasharray="4 4" />
                     </ComposedChart>
                   </ResponsiveContainer>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+
+              <Card className="md:col-span-2" style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
+                <CardHeader>
+                  <CardTitle>Synthetic Uptime</CardTitle>
+                  <CardDescription style={{ color: 'var(--muted-foreground)' }}>
+                    Last 7 days uptime by region (HTTP check).
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="h-[350px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={apiData.uptimeChecks}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                      <XAxis dataKey="region" stroke="var(--muted-foreground)" />
+                      <YAxis domain={[99.5, 100]} tickFormatter={(v) => `${v}%`} stroke="var(--muted-foreground)" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend wrapperStyle={{ color: 'var(--foreground)' }} />
+                      <Bar dataKey="uptime" name="Uptime %" fill="var(--chart-3)" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+
+              <Card className="md:col-span-5" style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
+                <CardHeader>
+                  <CardTitle>Alert Volume by Severity</CardTitle>
+                  <CardDescription style={{ color: 'var(--muted-foreground)' }}>
+                    Distribution of Alerts fired this week.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="h-[300px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={apiData.alertVolume}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                      <XAxis dataKey="day" stroke="var(--muted-foreground)" />
+                      <YAxis stroke="var(--muted-foreground)" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend wrapperStyle={{ color: 'var(--foreground)' }} />
+                      <Bar dataKey="critical" stackId="a" name="Critical" fill="var(--destructive)" />
+                      <Bar dataKey="warning" stackId="a" name="Warning" fill="var(--chart-5)" />
+                      <Bar dataKey="info" stackId="a" name="Info" fill="var(--chart-2)" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
           
           <TabsContent value="events">

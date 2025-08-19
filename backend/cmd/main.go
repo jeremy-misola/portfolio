@@ -10,7 +10,8 @@ func main() {
 	// injecting config into apiServer
 	server := api.NewAPIServer(":8080", config.Envs)
 	err := server.Run()
-	if err!=nil {
+	if err != nil {
 		log.Fatal(err)
+
 	}
 }
