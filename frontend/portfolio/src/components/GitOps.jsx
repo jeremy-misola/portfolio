@@ -1,13 +1,13 @@
 "use client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ReactFlow, MiniMap, Controls, Background, MarkerType, Handle, Position } from '@xyflow/react';
+import { ReactFlow, MiniMap, Controls, Background, Handle, Position } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import {
     BarChart, Bar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
-    XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+    XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, AreaChart, Area
 } from 'recharts';
-import { GitBranch, Layers, Rocket, BarChart2, GitCommit, GitPullRequest, Tag, Bug } from 'lucide-react';
+import { GitBranch, Layers, BarChart2, GitCommit, GitPullRequest, Tag, Bug, FileCode, Users, GitMerge, Timer } from 'lucide-react';
 import { memo } from 'react';
 
 // --- Mock Data for Charts ---
@@ -20,13 +20,28 @@ const mockPipelineData = {
     buildDurations: [
         { commit: 'a1b2c3d', duration: 185 }, { commit: 'e4f5g6h', duration: 192 },
         { commit: 'i7j8k9l', duration: 178 }, { commit: 'm0n1p2q', duration: 210 },
-        { commit: 'r3s4t5u', duration: 188 },
+        { commit: 'r3s4t5u', duration: 188 }, { commit: 'v6w7x8y', duration: 195 },
     ],
     deploymentHealth: [
         { subject: 'Tests', A: 95, fullMark: 100 }, { subject: 'Linting', A: 100, fullMark: 100 },
         { subject: 'Security Scan', A: 85, fullMark: 100 }, { subject: 'Build Speed', A: 75, fullMark: 100 },
         { subject: 'Code Coverage', A: 92, fullMark: 100 },
     ],
+    commitActivity: [
+        { name: 'Week 1', commits: 40 }, { name: 'Week 2', commits: 30 },
+        { name: 'Week 3', commits: 50 }, { name: 'Week 4', commits: 45 },
+        { name: 'Week 5', commits: 60 }, { name: 'Week 6', commits: 55 },
+    ],
+    pullRequestAnalysis: [
+        { state: 'Open', value: 12 },
+        { state: 'Merged', value: 88 },
+        { state: 'Closed', value: 5 },
+    ],
+    codeCoverage: [
+        { name: 'Jan', coverage: 85 }, { name: 'Feb', coverage: 86 },
+        { name: 'Mar', coverage: 88 }, { name: 'Apr', coverage: 90 },
+        { name: 'May', coverage: 92 }, { name: 'Jun', coverage: 91 },
+    ]
 };
 
 // --- Custom Tooltip for Charts ---
@@ -49,7 +64,6 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 // --- Custom Nodes for React Flow ---
-
 const BranchNode = memo(({ data }) => {
     const icons = {
         main: <GitBranch className="h-5 w-5 mr-2" />,
@@ -69,18 +83,8 @@ const BranchNode = memo(({ data }) => {
     );
 });
 
-const PipelineNode = memo(({ data }) => (
-    <div className="flex items-center p-3 rounded-lg shadow-md" style={{ background: data.style.background, color: data.style.color, border: `1px solid var(--border)` }}>
-        {data.icon}
-        <span className="font-semibold">{data.label}</span>
-        <Handle type="source" position={Position.Right} />
-        <Handle type="target" position={Position.Left} />
-    </div>
-));
-
 const nodeTypes = {
     branchNode: BranchNode,
-    pipelineNode: PipelineNode,
 };
 
 // --- Git Workflow Data ---
@@ -99,23 +103,6 @@ const gitWorkflowEdges = [
     { id: 'e-hotfix-main', source: 'hotfix', target: 'main', animated: true, label: 'Urgent Fix' },
 ];
 
-// --- CI/CD Pipeline Data ---
-const cicdPipelineNodes = [
-    { id: 'commit', type: 'pipelineNode', data: { label: 'Git Commit', icon: <GitCommit className="h-6 w-6 mr-3" />, style: { background: 'var(--chart-3)', color: 'var(--foreground)' } }, position: { x: 50, y: 50 } },
-    { id: 'action', type: 'pipelineNode', data: { label: 'GitHub Action', icon: <Rocket className="h-6 w-6 mr-3 text-blue-500" />, style: { background: 'var(--primary)', color: 'var(--primary-foreground)' } }, position: { x: 300, y: 50 } },
-    { id: 'build-test', type: 'pipelineNode', data: { label: 'Build & Test', icon: <BarChart2 className="h-6 w-6 mr-3 text-green-500" />, style: { background: 'var(--chart-4)', color: 'var(--foreground)' } }, position: { x: 50, y: 200 } },
-    { id: 'docker', type: 'pipelineNode', data: { label: 'Push to Docker Hub', icon: <Layers className="h-6 w-6 mr-3 text-cyan-500" />, style: { background: 'var(--chart-5)', color: 'var(--foreground)' } }, position: { x: 300, y: 200 } },
-    { id: 'argo', type: 'pipelineNode', data: { label: 'ArgoCD Sync', icon: <GitBranch className="h-6 w-6 mr-3 text-red-500" />, style: { background: 'var(--destructive)', color: 'var(--destructive-foreground)' } }, position: { x: 50, y: 350 } },
-    { id: 'k8s', type: 'pipelineNode', data: { label: 'Deploy to K8s', icon: <Rocket className="h-6 w-6 mr-3 text-purple-500" />, style: { background: 'var(--chart-2)', color: 'var(--foreground)' } }, position: { x: 300, y: 350 } },
-];
-const cicdPipelineEdges = [
-    { id: 'e1', source: 'commit', target: 'action', animated: true, markerEnd: { type: MarkerType.ArrowClosed } },
-    { id: 'e2', source: 'action', target: 'build-test', animated: true, markerEnd: { type: MarkerType.ArrowClosed } },
-    { id: 'e3', source: 'build-test', target: 'docker', animated: true, markerEnd: { type: MarkerType.ArrowClosed } },
-    { id: 'e4', source: 'docker', target: 'argo', animated: true, markerEnd: { type: MarkerType.ArrowClosed } },
-    { id: 'e5', source: 'argo', target: 'k8s', animated: true, markerEnd: { type: MarkerType.ArrowClosed } },
-];
-
 
 export default function GitOpsShowcase() {
     return (
@@ -127,10 +114,11 @@ export default function GitOpsShowcase() {
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue="git" className="w-full">
+                    {/* Updated TabsList to include three tabs */}
                     <TabsList className="grid w-full grid-cols-1 md:grid-cols-3">
                         <TabsTrigger value="git"><GitBranch className="mr-2 h-4 w-4" />Git Workflow</TabsTrigger>
-                        <TabsTrigger value="cicd"><Rocket className="mr-2 h-4 w-4" />CI/CD Pipeline</TabsTrigger>
-                        <TabsTrigger value="analytics"><BarChart2 className="mr-2 h-4 w-4" />Pipeline Analytics</TabsTrigger>
+                        <TabsTrigger value="repository"><BarChart2 className="mr-2 h-4 w-4" />Repository Analytics</TabsTrigger>
+                        <TabsTrigger value="pipeline"><GitMerge className="mr-2 h-4 w-4" />Pipeline Analytics</TabsTrigger>
                     </TabsList>
 
                     {/* Git Workflow Tab */}
@@ -139,7 +127,7 @@ export default function GitOpsShowcase() {
                             <div className="p-4 rounded-lg" style={{ border: '1px solid var(--border)' }}>
                                 <h3 className="text-2xl font-semibold mb-4">Feature Branch Workflow</h3>
                                 <p className="mb-4" style={{ color: 'var(--muted-foreground)' }}>
-                                    This diagram shows the Git branching strategy. All development starts from a feature branch, is reviewed via a Pull Request into `develop`, and then promoted to `main` through a release process.
+                                    This diagram shows the Git branching strategy. All development starts from a feature branch, is reviewed via a Pull Request into `develop`, and then promoted to `main` through a release process. This ensures code quality and a stable main branch.
                                 </p>
                             </div>
                             <div className="h-[500px] rounded-lg" style={{ border: '1px solid var(--border)' }}>
@@ -157,38 +145,73 @@ export default function GitOpsShowcase() {
                             </div>
                         </div>
                     </TabsContent>
-
-                    {/* CI/CD Pipeline Tab */}
-                    <TabsContent value="cicd">
-                        <div className="mt-4 grid md:grid-cols-2 gap-6 items-start">
-                             <div className="p-4 rounded-lg" style={{ border: '1px solid var(--border)' }}>
-                               <h3 className="text-2xl font-semibold mb-4">Automated CI/CD with GitOps</h3>
-                               <p className="mb-4" style={{ color: 'var(--muted-foreground)' }}>
-                                    Every `git push` triggers a fully automated pipeline. This process builds, tests, and containerizes the application, with ArgoCD handling the deployment to Kubernetes by ensuring the live state matches the desired state in Git.
-                               </p>
-                            </div>
-                           <div className="h-[500px] rounded-lg" style={{ border: '1px solid var(--border)' }}>
-                               <ReactFlow
-                                    defaultNodes={cicdPipelineNodes}
-                                    defaultEdges={cicdPipelineEdges}
-                                    nodeTypes={nodeTypes}
-                                    defaultViewport={{ zoom: 1, x: 0, y: 0 }}
-                                    fitView
-                                >
-                                    <MiniMap />
-                                    <Controls />
-                               </ReactFlow>
-                           </div>
+                    
+                    {/* NEW: Repository Analytics Tab */}
+                    <TabsContent value="repository">
+                        <div className="grid gap-6 mt-6 md:grid-cols-2 lg:grid-cols-3">
+                             <Card className="lg:col-span-2" style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center"><GitCommit className="mr-2 h-5 w-5" /> Commit Activity Over Time</CardTitle>
+                                    <CardDescription style={{ color: 'var(--muted-foreground)' }}>Weekly commit frequency in the repository.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="h-[350px]">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <LineChart data={mockPipelineData.commitActivity}>
+                                            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                                            <XAxis dataKey="name" stroke="var(--muted-foreground)" />
+                                            <YAxis stroke="var(--muted-foreground)" />
+                                            <Tooltip content={<CustomTooltip />} />
+                                            <Legend wrapperStyle={{ color: 'var(--foreground)' }} />
+                                            <Line type="monotone" dataKey="commits" name="Commits" stroke="var(--primary)" strokeWidth={2} />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </CardContent>
+                            </Card>
+                            <Card style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
+                                <CardHeader>
+                                     <CardTitle className="flex items-center"><GitPullRequest className="mr-2 h-5 w-5" /> Pull Request Analysis</CardTitle>
+                                     <CardDescription style={{ color: 'var(--muted-foreground)' }}>The current state of all PRs.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="h-[350px] w-full">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={mockPipelineData.pullRequestAnalysis} layout="vertical">
+                                            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                                            <XAxis type="number" stroke="var(--muted-foreground)" />
+                                            <YAxis dataKey="state" type="category" width={80} stroke="var(--muted-foreground)" />
+                                            <Tooltip content={<CustomTooltip />} />
+                                            <Bar dataKey="value" name="Count" fill="var(--chart-4)" />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </CardContent>
+                            </Card>
+                             <Card className="lg:col-span-3" style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
+                                <CardHeader>
+                                     <CardTitle className="flex items-center"><FileCode className="mr-2 h-5 w-5" /> Code Coverage Trend</CardTitle>
+                                     <CardDescription style={{ color: 'var(--muted-foreground)' }}>Test coverage percentage over the last six months.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="h-[350px] w-full">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <AreaChart data={mockPipelineData.codeCoverage}>
+                                            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                                            <XAxis dataKey="name" stroke="var(--muted-foreground)" />
+                                            <YAxis stroke="var(--muted-foreground)" domain={[80, 100]}/>
+                                            <Tooltip content={<CustomTooltip />} />
+                                            <Legend wrapperStyle={{ color: 'var(--foreground)' }} />
+                                            <Area type="monotone" dataKey="coverage" name="Coverage %" stroke="var(--chart-2)" fill="var(--chart-2)" fillOpacity={0.6} unit="%" />
+                                        </AreaChart>
+                                    </ResponsiveContainer>
+                                </CardContent>
+                            </Card>
                         </div>
                     </TabsContent>
                     
-                    {/* Pipeline Analytics Tab */}
-                    <TabsContent value="analytics">
-                        <div className="grid gap-6 mt-6 md:grid-cols-2">
-                             <Card style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
+                    {/* UPDATED: Pipeline Analytics Tab */}
+                    <TabsContent value="pipeline">
+                        <div className="grid gap-6 mt-6 md:grid-cols-2 lg:grid-cols-3">
+                             <Card className="lg:col-span-2" style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
                                 <CardHeader>
-                                    <CardTitle>Build & Deployment Frequency</CardTitle>
-                                    <CardDescription style={{ color: 'var(--muted-foreground)' }}>Monthly totals for pipeline executions.</CardDescription>
+                                    <CardTitle className="flex items-center"><GitMerge className="mr-2 h-5 w-5" /> Build & Deployment Frequency</CardTitle>
+                                    <CardDescription style={{ color: 'var(--muted-foreground)' }}>Number of builds and successful deployments per month.</CardDescription>
                                 </CardHeader>
                                 <CardContent className="h-[350px]">
                                     <ResponsiveContainer width="100%" height="100%">
@@ -198,29 +221,34 @@ export default function GitOpsShowcase() {
                                             <YAxis stroke="var(--muted-foreground)" />
                                             <Tooltip content={<CustomTooltip />} />
                                             <Legend wrapperStyle={{ color: 'var(--foreground)' }} />
-                                            <Bar dataKey="builds" fill="var(--chart-1)" name="Total Builds" />
-                                            <Bar dataKey="deployments" fill="var(--chart-2)" name="Successful Deployments" />
+                                            <Bar dataKey="builds" name="Builds" fill="var(--primary)" />
+                                            <Bar dataKey="deployments" name="Deployments" fill="var(--chart-1)" />
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </CardContent>
                             </Card>
-                            <Card style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
-                                <CardHeader><CardTitle>Recent Build Durations</CardTitle><CardDescription style={{ color: 'var(--muted-foreground)' }}>Time taken for the last 5 builds in the CI pipeline.</CardDescription></CardHeader>
-                                <CardContent className="h-[350px] w-full">
+                             <Card style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center"><Timer className="mr-2 h-5 w-5" /> Recent Build Durations</CardTitle>
+                                    <CardDescription style={{ color: 'var(--muted-foreground)' }}>Average build time in seconds for recent commits.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="h-[350px]">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={mockPipelineData.buildDurations} layout="vertical">
+                                        <LineChart data={mockPipelineData.buildDurations}>
                                             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                                            <XAxis type="number" stroke="var(--muted-foreground)" />
-                                            <YAxis dataKey="commit" type="category" width={80} stroke="var(--muted-foreground)" />
+                                            <XAxis dataKey="commit" stroke="var(--muted-foreground)" />
+                                            <YAxis stroke="var(--muted-foreground)" />
                                             <Tooltip content={<CustomTooltip />} />
-                                            <Legend wrapperStyle={{ color: 'var(--foreground)' }} />
-                                            <Bar dataKey="duration" name="Duration (sec)" fill="var(--chart-3)" unit="s" />
-                                        </BarChart>
+                                            <Line type="monotone" dataKey="duration" name="Duration (s)" stroke="var(--chart-5)" strokeWidth={2} unit="s" />
+                                        </LineChart>
                                     </ResponsiveContainer>
                                 </CardContent>
                             </Card>
-                            <Card className="md:col-span-2" style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
-                                <CardHeader><CardTitle>Latest Deployment Health</CardTitle><CardDescription style={{ color: 'var(--muted-foreground)' }}>A multi-factor health score for the last deployment.</CardDescription></CardHeader>
+                            <Card className="md:col-span-2 lg:col-span-3" style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center"><Users className="mr-2 h-5 w-5" /> Deployment Health & Quality</CardTitle>
+                                    <CardDescription style={{ color: 'var(--muted-foreground)' }}>A multi-factor health score for the latest deployment pipeline.</CardDescription>
+                                </CardHeader>
                                 <CardContent className="h-[350px] w-full">
                                     <ResponsiveContainer width="100%" height="100%">
                                         <RadarChart cx="50%" cy="50%" outerRadius="80%" data={mockPipelineData.deploymentHealth}>
