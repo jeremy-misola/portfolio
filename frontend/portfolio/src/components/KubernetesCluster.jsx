@@ -9,36 +9,35 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Button } from "@/components/ui/button";
 import { Server, Cloud, Waypoints, Box, Network, CircleDot, GitCommitHorizontal } from 'lucide-react';
 
-// --- Mock Data (Unchanged) ---
+// --- MOCK DATA (Supports Multiple Applications) ---
 const mockClusterData = {
   serverVersion: 'v1.28.3',
   nodes: [
     { name: 'k8s-worker-1', status: 'Ready' },
     { name: 'k8s-worker-2', status: 'Ready' },
     { name: 'k8s-worker-3', status: 'Ready' },
+    { name: 'k8s-worker-4', status: 'NotReady' },
   ],
-  deployment: {
-    name: 'portfolio-api-deployment',
-    replicas: { desired: 2, ready: 2 },
-    image: 'my-registry/portfolio-api:v1.2.5-a1b2c3d',
-  },
+  deployments: [
+    { id: 'dep1', name: 'portfolio-api-deployment', replicas: { desired: 2, ready: 2 }, image: 'my-registry/portfolio-api:v1.2.5-a1b2c3d' },
+    { id: 'dep2', name: 'auth-service-deployment', replicas: { desired: 1, ready: 1 }, image: 'my-registry/auth-service:v2.1.0-e4f5g6h' },
+  ],
   pods: [
-    { name: 'portfolio-api-deployment-67d...', node: 'k8s-worker-2', status: 'Running' },
-    { name: 'portfolio-api-deployment-95c...', node: 'k8s-worker-1', status: 'Running' },
+    { name: 'portfolio-api-deployment-67d...', node: 'k8s-worker-2', status: 'Running', deploymentId: 'dep1' },
+    { name: 'portfolio-api-deployment-95c...', node: 'k8s-worker-1', status: 'Running', deploymentId: 'dep1' },
+    { name: 'auth-service-deployment-abc...', node: 'k8s-worker-3', status: 'Running', deploymentId: 'dep2' },
   ],
-  service: {
-    name: 'portfolio-api-service',
-    type: 'ClusterIP',
-    clusterIP: '10.96.12.34',
-    ports: '8080/TCP',
-  },
-  ingress: {
-    name: 'portfolio-ingress',
-    host: 'www.my-devops-portfolio.com',
-    tls: true,
-  },
+  services: [
+    { id: 'svc1', name: 'portfolio-api-service', type: 'ClusterIP', clusterIP: '10.96.12.34', ports: '8080/TCP', deploymentId: 'dep1' },
+    { id: 'svc2', name: 'auth-service-svc', type: 'ClusterIP', clusterIP: '10.96.56.78', ports: '80/TCP', deploymentId: 'dep2' },
+  ],
+  ingresses: [
+    { id: 'ing1', name: 'portfolio-ingress', host: 'www.my-devops-portfolio.com', tls: true, serviceId: 'svc1' },
+    { id: 'ing2', name: 'auth-ingress', host: 'auth.my-app.com', tls: true, serviceId: 'svc2' },
+  ],
   activePod: 'portfolio-api-deployment-67d...',
 };
+
 
 // --- Custom React Flow Nodes (Unchanged) ---
 const DeploymentNode = ({ data }) => (
@@ -112,6 +111,7 @@ const IngressNode = ({ data }) => (
        <div className="flex justify-between items-center"><span>Host:</span> <a href={`https://${data.host}`} target="_blank" rel="noopener noreferrer" className="font-mono text-purple-500 hover:underline">{data.host}</a></div>
        <div className="flex justify-between mt-1"><span>TLS Enabled:</span> <Badge variant={data.tls ? 'default' : 'destructive'}>{data.tls ? 'Yes' : 'No'}</Badge></div>
     </CardContent>
+    <Handle type="source" position={Position.Bottom} className="w-2 h-2" />
     <Handle type="target" position={Position.Top} className="w-2 h-2" />
   </Card>
 );
@@ -122,40 +122,62 @@ const nodeTypes = { deployment: DeploymentNode, pod: PodNode, service: ServiceNo
 export default function KubernetesClusterSection() {
   const k8sData = mockClusterData;
 
-  const { initialNodes, initialEdges } = useMemo(() => {
-    // UPDATED: Increased position values for better spacing
-    const nodes = [
-      { id: 'ingress',    type: 'ingress',    position: { x: 250, y: 0 },   data: { ...k8sData.ingress } },
-      { id: 'service',    type: 'service',    position: { x: 250, y: 225 },  data: { ...k8sData.service } },
-      { id: 'deployment', type: 'deployment', position: { x: 250, y: 450 }, data: { ...k8sData.deployment } },
-    ];
-    
-    // UPDATED: Increased horizontal spacing by changing the multiplier from 270 to 320
-    const podNodes = k8sData.pods.map((pod, index) => ({
-      id: `pod-${index}`,
-      type: 'pod',
-      // UPDATED: Increased Y position and adjusted X logic for better spacing
-      position: { x: 170 + index * 320, y: 700 },
-      data: { ...pod, isActive: pod.name === k8sData.activePod },
-    }));
+  // FIXED: Destructure activeDeployment from the useMemo result
+  const { initialNodes, initialEdges, activeDeployment } = useMemo(() => {
+    const nodes = [];
+    const edges = [];
+    const horizontalSpacing = 650;
+    const verticalSpacing = 225;
 
-    // Edges logic remains the same, it will just connect to the new positions
-    const edges = [
-      { id: 'e-ingress-service',    source: 'ingress',    target: 'service',    animated: true, type: 'smoothstep' },
-      { id: 'e-service-deployment', source: 'service',    target: 'deployment', animated: true, type: 'smoothstep' },
-    ];
+    // This logic now correctly stays inside useMemo
+    const activePodData = k8sData.pods.find(p => p.name === k8sData.activePod);
+    const activeDeployment = activePodData 
+        ? k8sData.deployments.find(d => d.id === activePodData.deploymentId) 
+        : k8sData.deployments[0];
 
-    k8sData.pods.forEach((_, index) => {
-        edges.push({
-            id: `e-deployment-pod-${index}`,
-            source: 'deployment',
-            target: `pod-${index}`,
-            animated: true,
-            type: 'smoothstep',
+    k8sData.deployments.forEach((deployment, appIndex) => {
+        const xPos = appIndex * horizontalSpacing;
+        const service = k8sData.services.find(s => s.deploymentId === deployment.id);
+        const ingress = service ? k8sData.ingresses.find(i => i.serviceId === service.id) : null;
+        const pods = k8sData.pods.filter(p => p.deploymentId === deployment.id);
+        
+        if (ingress) {
+            nodes.push({ id: `ingress-${ingress.id}`, type: 'ingress', position: { x: xPos, y: 0 }, data: { ...ingress } });
+        }
+        if (service) {
+            nodes.push({ id: `service-${service.id}`, type: 'service', position: { x: xPos, y: verticalSpacing }, data: { ...service } });
+        }
+        nodes.push({ id: `deployment-${deployment.id}`, type: 'deployment', position: { x: xPos, y: verticalSpacing * 2 }, data: { ...deployment } });
+
+        const podHorizontalSpacing = 270;
+        const podStartX = xPos - ((pods.length - 1) * podHorizontalSpacing) / 2;
+
+        pods.forEach((pod, podIndex) => {
+            nodes.push({
+                id: `pod-${pod.name}`,
+                type: 'pod',
+                position: { x: podStartX + podIndex * podHorizontalSpacing, y: verticalSpacing * 3 },
+                data: { ...pod, isActive: pod.name === k8sData.activePod },
+            });
+            edges.push({
+                id: `e-dep-${deployment.id}-pod-${pod.name}`,
+                source: `deployment-${deployment.id}`,
+                target: `pod-${pod.name}`,
+                animated: true,
+                type: 'smoothstep'
+            });
         });
+
+        if (ingress && service) {
+            edges.push({ id: `e-ing-${ingress.id}-svc-${service.id}`, source: `ingress-${ingress.id}`, target: `service-${service.id}`, animated: true, type: 'smoothstep' });
+        }
+        if (service) {
+            edges.push({ id: `e-svc-${service.id}-dep-${deployment.id}`, source: `service-${service.id}`, target: `deployment-${deployment.id}`, animated: true, type: 'smoothstep' });
+        }
     });
 
-    return { initialNodes: [...nodes, ...podNodes], initialEdges: edges };
+    // FIXED: Return activeDeployment along with nodes and edges
+    return { initialNodes: nodes, initialEdges: edges, activeDeployment };
   }, [k8sData]);
 
   return (
@@ -181,9 +203,14 @@ export default function KubernetesClusterSection() {
                          </div>
                          <div className="flex justify-between items-center">
                             <span className="text-sm text-muted-foreground">Node Status</span>
-                            <Badge variant="default" className="bg-green-600 hover:bg-green-700">
-                                {k8sData.nodes.filter(n => n.status === 'Ready').length} Ready
-                            </Badge>
+                            <div className='flex items-center gap-2'>
+                                <Badge variant="default" className="bg-green-600 hover:bg-green-700">
+                                    {k8sData.nodes.filter(n => n.status === 'Ready').length} Ready
+                                </Badge>
+                                 <Badge variant="destructive">
+                                    {k8sData.nodes.filter(n => n.status !== 'Ready').length} Unhealthy
+                                </Badge>
+                            </div>
                          </div>
                          <TooltipProvider>
                             <Tooltip>
@@ -201,28 +228,28 @@ export default function KubernetesClusterSection() {
                  <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center"><CircleDot className="mr-2 text-green-500"/>Active Pod</CardTitle>
-                        <CardDescription>The exact pod serving your request.</CardDescription>
+                        <CardDescription>The exact pod serving your current request.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="p-4 bg-green-900/50 rounded-lg border border-green-700 text-center">
-                            <p className="font-mono text-lg text-green-300 break-all">{k8sData.activePod}</p>
+                            <p className="font-mono text-lg text-green-300 break-all">{k8sData.activePod || 'N/A'}</p>
                         </div>
                     </CardContent>
                 </Card>
                  <Card>
                     <CardHeader>
-                        <CardTitle className="flex items-center"><GitCommitHorizontal className="mr-2"/> Current Deployment</CardTitle>
-                         <CardDescription>The Git commit powering this deployment.</CardDescription>
+                        <CardTitle className="flex items-center"><GitCommitHorizontal className="mr-2"/> Active Deployment</CardTitle>
+                         <CardDescription>The Git commit powering the active application.</CardDescription>
                     </CardHeader>
                     <CardContent className="text-center">
                         <Badge variant="secondary" className="font-mono text-sm break-all">
-                           {k8sData.deployment.image.split('-').pop()}
+                           {/* This now works correctly */}
+                           {activeDeployment ? activeDeployment.image.split('-').pop() : 'N/A'}
                         </Badge>
                     </CardContent>
                 </Card>
             </div>
 
-            {/* UPDATED: Increased min-height to accommodate the taller, more spaced-out diagram */}
             <div className="lg:col-span-2 min-h-[900px] rounded-lg border bg-background shadow-lg">
                  <ReactFlow
                     nodes={initialNodes}
