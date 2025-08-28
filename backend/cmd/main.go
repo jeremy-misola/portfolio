@@ -12,12 +12,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	// injecting config into apiServer
 	server := api.NewAPIServer(":8080", config.Envs, kubeClient)
-	runError := server.Run()
-	if runError != nil {
-		log.Fatal(runError)
-
+	runErr := server.Run()
+	if runErr != nil {
+		log.Fatal(runErr)
 	}
 }

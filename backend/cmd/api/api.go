@@ -18,11 +18,11 @@ type APIServer struct {
 	kubeClient *kubernetes.Clientset
 }
 
-func NewAPIServer(addr string, config config.Config, kubeClient *kubernetes.Clientset) *APIServer {
+func NewAPIServer(addr string, config config.Config, client *kubernetes.Clientset) *APIServer {
 	return &APIServer{
 		addr:       addr,
 		config:     config,
-		kubeClient: kubeClient,
+		kubeClient: client,
 	}
 }
 
