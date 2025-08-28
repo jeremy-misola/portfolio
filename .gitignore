@@ -2,3 +2,4 @@
 .DS_Store
 .ansible/
 scripts/ansible/k3s-ansible/inventory.yml
+../../.vscode/

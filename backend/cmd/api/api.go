@@ -9,25 +9,28 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"k8s.io/client-go/kubernetes"
 )
 
 type APIServer struct {
-	addr string
-	config config.Config
+	addr       string
+	config     config.Config
+	kubeClient *kubernetes.Clientset
 }
 
-func NewAPIServer(addr string, config config.Config) *APIServer {
+func NewAPIServer(addr string, config config.Config, kubeClient *kubernetes.Clientset) *APIServer {
 	return &APIServer{
-		addr: addr,
-		config: config,
+		addr:       addr,
+		config:     config,
+		kubeClient: kubeClient,
 	}
 }
 
-func (s *APIServer) Run() error{
+func (s *APIServer) Run() error {
 	router := mux.NewRouter()
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
-	pipelineHandler := pipeline.NewHandler()	
+	pipelineHandler := pipeline.NewHandler()
 	pipelineHandler.RegisterRoutes(subrouter)
 
 	monitoringHandler := monitoring.NewHandler()
