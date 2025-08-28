@@ -18,6 +18,6 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 
 }
 
-
 func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
+
 }
