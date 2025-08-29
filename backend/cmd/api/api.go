@@ -5,10 +5,12 @@ import (
 	"backend/services/cluster"
 	"backend/services/monitoring"
 	"backend/services/pipeline"
-	"log"
+	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/zerolog/log"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -39,6 +41,8 @@ func (s *APIServer) Run() error {
 	clusterHandler := cluster.NewHandler(s.kubeClient)
 	clusterHandler.RegisterRoutes(subrouter)
 
-	log.Println("Listening on", s.addr)
+	log.Info().Msg("This is a structured log message.")
+	fmt.Fprintln(os.Stderr, "This is a log message that shows up right away.")
+
 	return http.ListenAndServe(s.addr, router)
 }

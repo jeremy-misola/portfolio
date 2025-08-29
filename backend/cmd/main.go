@@ -6,13 +6,13 @@ import (
 	"backend/platform/kubernetes"
 	"fmt"
 	"log"
-	"os"
 )
 
 func main() {
 	fmt.Println("testing123")
-	os.Stdout.Sync()
+	fmt.Println("this is the beginning of my app")
 	kubeClient, err := kubernetes.CreateKubeClient()
+
 	if err != nil {
 		log.Fatal(err)
 	}
