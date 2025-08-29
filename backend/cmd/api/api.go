@@ -36,7 +36,7 @@ func (s *APIServer) Run() error {
 	monitoringHandler := monitoring.NewHandler()
 	monitoringHandler.RegisterRoutes(subrouter)
 
-	clusterHandler := cluster.NewHandler()
+	clusterHandler := cluster.NewHandler(s.kubeClient)
 	clusterHandler.RegisterRoutes(subrouter)
 
 	log.Println("Listening on", s.addr)
