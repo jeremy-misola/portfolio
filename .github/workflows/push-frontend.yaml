@@ -26,4 +26,4 @@ jobs:
             --platform linux/amd64,linux/arm64 \
             -f frontend/Dockerfile \
             -t jeremymisola/portfolio-frontend:0.0.1 \
-            --push .
+            --push ./frontend
