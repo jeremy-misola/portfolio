@@ -2,38 +2,49 @@ package types
 
 type Node struct {
 	Name   string `json:"name"`
-	Status string `json:"name"`
+	Status string `json:"status"`
 }
 type Deployment struct {
-	Id    string `json:"name"`
-	Name  string `json:"name"`
-	Image string `json:"name"`
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Replicas Replica
+	Image    string `json:"image"`
 }
 
 type Pod struct {
 	Name         string `json:"name"`
-	Node         string `json:"name"`
-	Status       string `json:"name"`
-	DeploymentID string `json:"name"`
+	Node         string `json:"node"`
+	Status       string `json:"status"`
+	DeploymentID string `json:"deploymentId"`
 }
 
 type Service struct {
-	ID           string `json:"name"`
+	ID           string `json:"id"`
 	Name         string `json:"name"`
-	Type         string `json:"name"`
-	ClusterIP    string `json:"name"`
-	Ports        string `json:"name"`
-	DeploymentID string `json:"name"`
+	Type         string `json:"type"`
+	ClusterIP    string `json:"clusterIP"`
+	Ports        string `json:"ports"`
+	DeploymentID string `json:"deploymentId"`
 }
 type Ingress struct {
-	ID        string `json:"name"`
+	ID        string `json:"id"`
 	Name      string `json:"name"`
-	Host      string `json:"name"`
-	TLS       string `json:"name"`
-	ServiceID string `json:"name"`
+	Host      string `json:"host"`
+	TLS       bool   `json:"tls"`
+	ServiceID string `json:"serviceId"`
 }
 
 type Replica struct {
-	Desired string `json:"name"`
-	Ready   string `json:"name"`
+	Desired int `json:"desired"`
+	Ready   int `json:"ready"`
+}
+
+type ClusterStateResponse struct {
+	ServerVersion string       `json:"serverVersion"`
+	Nodes         []Node       `json:"nodes"`
+	Deployments   []Deployment `json:"deployments"`
+	Pods          []Pod        `json:"pods"`
+	Services      []Service    `json:"services"`
+	Ingresses     []Ingress    `json:"ingresses"`
+	ActivePod     string       `json:"activePod"`
 }
