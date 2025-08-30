@@ -29,14 +29,12 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("hello")
 
-	// Get Server Version
 	serverVersion, err := h.clientset.Discovery().ServerVersion()
 	if err != nil {
 		utils.WriteError(w, 500, err)
 		return
 	}
 
-	// Get Pods
 	pods, err := h.clientset.CoreV1().Pods("default").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		utils.WriteError(w, 500, err)
@@ -45,15 +43,24 @@ func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
 
 	var podList []types.Pod
 	for _, pod := range pods.Items {
+		var deploymentName string
+		owner := metav1.GetControllerOf(&pod)
+		if owner != nil {
+			if owner.Kind == "ReplicaSet" {
+				replicaSet, _ := h.clientset.AppsV1().ReplicaSets(pod.Namespace).Get(r.Context(), owner.Name, metav1.GetOptions{})
+				rsOwner := metav1.GetControllerOf(replicaSet)
+				deploymentName = rsOwner.Name
+			}
+		}
+
 		podList = append(podList, types.Pod{
 			Name:         pod.Name,
 			Node:         pod.Spec.NodeName,
 			Status:       string(pod.Status.Phase),
-			DeploymentID: "test",
+			DeploymentID: deploymentName,
 		})
 	}
 
-	// Get Nodes
 	nodes, err := h.clientset.CoreV1().Nodes().List(r.Context(), metav1.ListOptions{})
 	if err != nil {
 		utils.WriteError(w, 500, err)
@@ -68,7 +75,6 @@ func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	// Get Deployments
 	deployments, err := h.clientset.AppsV1().Deployments("default").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		utils.WriteError(w, 500, err)
@@ -128,7 +134,7 @@ func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
 			Name:      ingress.Name,
 			Host:      host,
 			TLS:       tls,
-			ServiceID: "test", // You would need logic to determine the backend service
+			ServiceID: "test",
 		})
 	}
 

@@ -5,10 +5,10 @@ type Node struct {
 	Status string `json:"status"`
 }
 type Deployment struct {
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	Replicas Replica
-	Image    string `json:"image"`
+	ID       string  `json:"id"`
+	Name     string  `json:"name"`
+	Replicas Replica `json:"replicas"`
+	Image    string  `json:"image"`
 }
 
 type Pod struct {
