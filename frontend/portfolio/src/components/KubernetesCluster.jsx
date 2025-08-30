@@ -38,6 +38,8 @@ const mockClusterData = {
   activePod: 'portfolio-api-deployment-67d...',
 };
 
+const state = fetch('http://portfolio-backend/api/v1/cluster/state')
+mockClusterData = JSON.parse(state)
 
 // --- Custom React Flow Nodes (Unchanged) ---
 const DeploymentNode = ({ data }) => (
