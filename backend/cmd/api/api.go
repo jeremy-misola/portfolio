@@ -42,6 +42,7 @@ func (s *APIServer) Run() error {
 	clusterHandler.RegisterRoutes(subrouter)
 
 	log.Info().Msg("This is a structured log message.")
+	fmt.Println("This is the regular print statement")
 	fmt.Fprintln(os.Stderr, "This is a log message that shows up right away.")
 
 	return http.ListenAndServe(s.addr, router)
