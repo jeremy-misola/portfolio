@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react'; // Import useState
 import { ReactFlow, MiniMap, Controls, Background, Handle, Position } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -38,149 +38,167 @@ const mockClusterData = {
   activePod: 'portfolio-api-deployment-67d...',
 };
 
-const state = fetch('http://portfolio-backend/api/v1/cluster/state')
-mockClusterData = JSON.parse(state)
-
 // --- Custom React Flow Nodes (Unchanged) ---
 const DeploymentNode = ({ data }) => (
-  <Card className="w-64 border-2 border-primary shadow-lg">
-    <CardHeader className="p-3">
-      <CardTitle className="flex items-center text-base">
-        <Box className="mr-2 h-5 w-5 text-primary" />
-        Deployment
-      </CardTitle>
-      <CardDescription className="text-xs">{data.name}</CardDescription>
-    </CardHeader>
-    <CardContent className="p-3 text-xs">
-      <div className="flex justify-between"><span>Replicas:</span> <Badge variant="secondary">{data.replicas.ready}/{data.replicas.desired}</Badge></div>
-      <div className="mt-2 flex items-start justify-between">
-        <span className="mt-1">Image:</span>
-        <Badge variant="outline" className="text-right font-mono text-wrap max-w-[150px]">{data.image}</Badge>
-      </div>
-    </CardContent>
-    <Handle type="source" position={Position.Bottom} className="w-2 h-2" />
-    <Handle type="target" position={Position.Top} className="w-2 h-2" />
-  </Card>
-);
+    <Card className="w-64 border-2 border-primary shadow-lg">
+      <CardHeader className="p-3">
+        <CardTitle className="flex items-center text-base">
+          <Box className="mr-2 h-5 w-5 text-primary" />
+          Deployment
+        </CardTitle>
+        <CardDescription className="text-xs">{data.name}</CardDescription>
+      </CardHeader>
+      <CardContent className="p-3 text-xs">
+        <div className="flex justify-between"><span>Replicas:</span> <Badge variant="secondary">{data.replicas.ready}/{data.replicas.desired}</Badge></div>
+        <div className="mt-2 flex items-start justify-between">
+          <span className="mt-1">Image:</span>
+          <Badge variant="outline" className="text-right font-mono text-wrap max-w-[150px]">{data.image}</Badge>
+        </div>
+      </CardContent>
+      <Handle type="source" position={Position.Bottom} className="w-2 h-2" />
+      <Handle type="target" position={Position.Top} className="w-2 h-2" />
+    </Card>
+  );
 
-const PodNode = ({ data }) => (
-  <Card className={`w-64 shadow-md ${data.isActive ? 'border-2 border-green-500 animate-pulse' : ''}`}>
-    <CardHeader className="p-3">
-      <CardTitle className="flex items-center text-sm">
-        <Server className="mr-2 h-4 w-4 text-muted-foreground" />
-        Pod
-      </CardTitle>
-      <CardDescription className="text-xs font-mono">{data.name}</CardDescription>
-    </CardHeader>
-    <CardContent className="p-3 text-xs">
-      <div className="flex justify-between"><span>Status:</span> <Badge className={data.status === 'Running' ? 'bg-green-600' : 'bg-yellow-500'}>{data.status}</Badge></div>
-      <div className="flex justify-between mt-1"><span>Node:</span> <span className="font-mono">{data.node}</span></div>
-      {data.isActive && <div className="text-center text-green-500 font-bold mt-2 text-xs">Serving Your Request!</div>}
-    </CardContent>
-    <Handle type="target" position={Position.Top} className="w-2 h-2" />
-  </Card>
-);
+  const PodNode = ({ data }) => (
+    <Card className={`w-64 shadow-md ${data.isActive ? 'border-2 border-green-500 animate-pulse' : ''}`}>
+      <CardHeader className="p-3">
+        <CardTitle className="flex items-center text-sm">
+          <Server className="mr-2 h-4 w-4 text-muted-foreground" />
+          Pod
+        </CardTitle>
+        <CardDescription className="text-xs font-mono">{data.name}</CardDescription>
+      </CardHeader>
+      <CardContent className="p-3 text-xs">
+        <div className="flex justify-between"><span>Status:</span> <Badge className={data.status === 'Running' ? 'bg-green-600' : 'bg-yellow-500'}>{data.status}</Badge></div>
+        <div className="flex justify-between mt-1"><span>Node:</span> <span className="font-mono">{data.node}</span></div>
+        {data.isActive && <div className="text-center text-green-500 font-bold mt-2 text-xs">Serving Your Request!</div>}
+      </CardContent>
+      <Handle type="target" position={Position.Top} className="w-2 h-2" />
+    </Card>
+  );
 
-const ServiceNode = ({ data }) => (
-  <Card className="w-64 border-dashed border-blue-500 shadow-lg">
-    <CardHeader className="p-3">
-      <CardTitle className="flex items-center text-base">
-        <Waypoints className="mr-2 h-5 w-5 text-blue-500" />
-        Service
-      </CardTitle>
-      <CardDescription className="text-xs">{data.name}</CardDescription>
-    </CardHeader>
-    <CardContent className="p-3 text-xs">
-      <div className="flex justify-between"><span>Type:</span> <span className="font-mono">{data.type}</span></div>
-      <div className="flex justify-between mt-1"><span>Cluster IP:</span> <span className="font-mono">{data.clusterIP}</span></div>
-      <div className="flex justify-between mt-1"><span>Ports:</span> <span className="font-mono">{data.ports}</span></div>
-    </CardContent>
-    <Handle type="source" position={Position.Bottom} className="w-2 h-2" />
-    <Handle type="target" position={Position.Top} className="w-2 h-2" />
-  </Card>
-);
+  const ServiceNode = ({ data }) => (
+    <Card className="w-64 border-dashed border-blue-500 shadow-lg">
+      <CardHeader className="p-3">
+        <CardTitle className="flex items-center text-base">
+          <Waypoints className="mr-2 h-5 w-5 text-blue-500" />
+          Service
+        </CardTitle>
+        <CardDescription className="text-xs">{data.name}</CardDescription>
+      </CardHeader>
+      <CardContent className="p-3 text-xs">
+        <div className="flex justify-between"><span>Type:</span> <span className="font-mono">{data.type}</span></div>
+        <div className="flex justify-between mt-1"><span>Cluster IP:</span> <span className="font-mono">{data.clusterIP}</span></div>
+        <div className="flex justify-between mt-1"><span>Ports:</span> <span className="font-mono">{data.ports}</span></div>
+      </CardContent>
+      <Handle type="source" position={Position.Bottom} className="w-2 h-2" />
+      <Handle type="target" position={Position.Top} className="w-2 h-2" />
+    </Card>
+  );
 
-const IngressNode = ({ data }) => (
-  <Card className="w-64 border-dashed border-purple-500 shadow-lg">
-    <CardHeader className="p-3">
-      <CardTitle className="flex items-center text-base">
-        <Cloud className="mr-2 h-5 w-5 text-purple-500" />
-        Ingress
-      </CardTitle>
-      <CardDescription className="text-xs">{data.name}</CardDescription>
-    </CardHeader>
-    <CardContent className="p-3 text-xs">
-       <div className="flex justify-between items-center"><span>Host:</span> <a href={`https://${data.host}`} target="_blank" rel="noopener noreferrer" className="font-mono text-purple-500 hover:underline">{data.host}</a></div>
-       <div className="flex justify-between mt-1"><span>TLS Enabled:</span> <Badge variant={data.tls ? 'default' : 'destructive'}>{data.tls ? 'Yes' : 'No'}</Badge></div>
-    </CardContent>
-    <Handle type="source" position={Position.Bottom} className="w-2 h-2" />
-    <Handle type="target" position={Position.Top} className="w-2 h-2" />
-  </Card>
-);
+  const IngressNode = ({ data }) => (
+    <Card className="w-64 border-dashed border-purple-500 shadow-lg">
+      <CardHeader className="p-3">
+        <CardTitle className="flex items-center text-base">
+          <Cloud className="mr-2 h-5 w-5 text-purple-500" />
+          Ingress
+        </CardTitle>
+        <CardDescription className="text-xs">{data.name}</CardDescription>
+      </CardHeader>
+      <CardContent className="p-3 text-xs">
+         <div className="flex justify-between items-center"><span>Host:</span> <a href={`https://${data.host}`} target="_blank" rel="noopener noreferrer" className="font-mono text-purple-500 hover:underline">{data.host}</a></div>
+         <div className="flex justify-between mt-1"><span>TLS Enabled:</span> <Badge variant={data.tls ? 'default' : 'destructive'}>{data.tls ? 'Yes' : 'No'}</Badge></div>
+      </CardContent>
+      <Handle type="source" position={Position.Bottom} className="w-2 h-2" />
+      <Handle type="target" position={Position.Top} className="w-2 h-2" />
+    </Card>
+  );
 
 const nodeTypes = { deployment: DeploymentNode, pod: PodNode, service: ServiceNode, ingress: IngressNode };
 
 // --- Main Component ---
 export default function KubernetesClusterSection() {
-  const k8sData = mockClusterData;
+    const [k8sData, setK8sData] = useState(null); // Initialize with null
 
-  // FIXED: Destructure activeDeployment from the useMemo result
-  const { initialNodes, initialEdges, activeDeployment } = useMemo(() => {
-    const nodes = [];
-    const edges = [];
-    const horizontalSpacing = 650;
-    const verticalSpacing = 225;
-
-    // This logic now correctly stays inside useMemo
-    const activePodData = k8sData.pods.find(p => p.name === k8sData.activePod);
-    const activeDeployment = activePodData 
-        ? k8sData.deployments.find(d => d.id === activePodData.deploymentId) 
-        : k8sData.deployments[0];
-
-    k8sData.deployments.forEach((deployment, appIndex) => {
-        const xPos = appIndex * horizontalSpacing;
-        const service = k8sData.services.find(s => s.deploymentId === deployment.id);
-        const ingress = service ? k8sData.ingresses.find(i => i.serviceId === service.id) : null;
-        const pods = k8sData.pods.filter(p => p.deploymentId === deployment.id);
-        
-        if (ingress) {
-            nodes.push({ id: `ingress-${ingress.id}`, type: 'ingress', position: { x: xPos, y: 0 }, data: { ...ingress } });
+    useEffect(() => {
+      const fetchClusterData = async () => {
+        try {
+          const response = await fetch('/api/cluster-state');
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const liveData = await response.json();
+          setK8sData(liveData);
+        } catch (error) {
+          console.error("Could not fetch Kubernetes cluster data, falling back to mock data:", error);
+          setK8sData(mockClusterData); // Fallback to mock data on error
         }
-        if (service) {
-            nodes.push({ id: `service-${service.id}`, type: 'service', position: { x: xPos, y: verticalSpacing }, data: { ...service } });
+      };
+
+      fetchClusterData();
+    }, []);
+
+    const { initialNodes, initialEdges, activeDeployment } = useMemo(() => {
+        if (!k8sData) { // Guard against null k8sData
+            return { initialNodes: [], initialEdges: [], activeDeployment: null };
         }
-        nodes.push({ id: `deployment-${deployment.id}`, type: 'deployment', position: { x: xPos, y: verticalSpacing * 2 }, data: { ...deployment } });
+        const nodes = [];
+        const edges = [];
+        const horizontalSpacing = 650;
+        const verticalSpacing = 225;
 
-        const podHorizontalSpacing = 270;
-        const podStartX = xPos - ((pods.length - 1) * podHorizontalSpacing) / 2;
+        const activePodData = k8sData.pods.find(p => p.name === k8sData.activePod);
+        const activeDeployment = activePodData
+            ? k8sData.deployments.find(d => d.id === activePodData.deploymentId)
+            : k8sData.deployments[0];
 
-        pods.forEach((pod, podIndex) => {
-            nodes.push({
-                id: `pod-${pod.name}`,
-                type: 'pod',
-                position: { x: podStartX + podIndex * podHorizontalSpacing, y: verticalSpacing * 3 },
-                data: { ...pod, isActive: pod.name === k8sData.activePod },
+        k8sData.deployments.forEach((deployment, appIndex) => {
+            const xPos = appIndex * horizontalSpacing;
+            const service = k8sData.services.find(s => s.deploymentId === deployment.id);
+            const ingress = service ? k8sData.ingresses.find(i => i.serviceId === service.id) : null;
+            const pods = k8sData.pods.filter(p => p.deploymentId === deployment.id);
+
+            if (ingress) {
+                nodes.push({ id: `ingress-${ingress.id}`, type: 'ingress', position: { x: xPos, y: 0 }, data: { ...ingress } });
+            }
+            if (service) {
+                nodes.push({ id: `service-${service.id}`, type: 'service', position: { x: xPos, y: verticalSpacing }, data: { ...service } });
+            }
+            nodes.push({ id: `deployment-${deployment.id}`, type: 'deployment', position: { x: xPos, y: verticalSpacing * 2 }, data: { ...deployment } });
+
+            const podHorizontalSpacing = 270;
+            const podStartX = xPos - ((pods.length - 1) * podHorizontalSpacing) / 2;
+
+            pods.forEach((pod, podIndex) => {
+                nodes.push({
+                    id: `pod-${pod.name}`,
+                    type: 'pod',
+                    position: { x: podStartX + podIndex * podHorizontalSpacing, y: verticalSpacing * 3 },
+                    data: { ...pod, isActive: pod.name === k8sData.activePod },
+                });
+                edges.push({
+                    id: `e-dep-${deployment.id}-pod-${pod.name}`,
+                    source: `deployment-${deployment.id}`,
+                    target: `pod-${pod.name}`,
+                    animated: true,
+                    type: 'smoothstep'
+                });
             });
-            edges.push({
-                id: `e-dep-${deployment.id}-pod-${pod.name}`,
-                source: `deployment-${deployment.id}`,
-                target: `pod-${pod.name}`,
-                animated: true,
-                type: 'smoothstep'
-            });
+
+            if (ingress && service) {
+                edges.push({ id: `e-ing-${ingress.id}-svc-${service.id}`, source: `ingress-${ingress.id}`, target: `service-${service.id}`, animated: true, type: 'smoothstep' });
+            }
+            if (service) {
+                edges.push({ id: `e-svc-${service.id}-dep-${deployment.id}`, source: `service-${service.id}`, target: `deployment-${deployment.id}`, animated: true, type: 'smoothstep' });
+            }
         });
+        return { initialNodes: nodes, initialEdges: edges, activeDeployment };
+    }, [k8sData]);
 
-        if (ingress && service) {
-            edges.push({ id: `e-ing-${ingress.id}-svc-${service.id}`, source: `ingress-${ingress.id}`, target: `service-${service.id}`, animated: true, type: 'smoothstep' });
-        }
-        if (service) {
-            edges.push({ id: `e-svc-${service.id}-dep-${deployment.id}`, source: `service-${service.id}`, target: `deployment-${deployment.id}`, animated: true, type: 'smoothstep' });
-        }
-    });
-
-    // FIXED: Return activeDeployment along with nodes and edges
-    return { initialNodes: nodes, initialEdges: edges, activeDeployment };
-  }, [k8sData]);
+    if (!k8sData) {
+        return <div>Loading Cluster Data...</div>; // Or some other loading state
+    }
 
   return (
     <section id="cluster" className="py-16 sm:py-20 bg-muted/20 scroll-mt-24">
@@ -191,7 +209,7 @@ export default function KubernetesClusterSection() {
                 This is a live, read-only view of the Kubernetes infrastructure serving this very page.
             </p>
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-1 space-y-6">
                 <Card>
@@ -245,7 +263,6 @@ export default function KubernetesClusterSection() {
                     </CardHeader>
                     <CardContent className="text-center">
                         <Badge variant="secondary" className="font-mono text-sm break-all">
-                           {/* This now works correctly */}
                            {activeDeployment ? activeDeployment.image.split('-').pop() : 'N/A'}
                         </Badge>
                     </CardContent>
