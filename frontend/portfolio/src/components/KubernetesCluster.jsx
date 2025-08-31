@@ -119,25 +119,32 @@ const nodeTypes = { deployment: DeploymentNode, pod: PodNode, service: ServiceNo
 
 // --- Main Component ---
 export default function KubernetesClusterSection() {
+
     const [k8sData, setK8sData] = useState(null); // Initialize with null
+    const [error, setError] = useState(null);
 
     useEffect(() => {
       const fetchClusterData = async () => {
         try {
           const response = await fetch('/api/cluster-state');
           if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            // Capture the error message from the API route
+            const errorData = await response.json();
+            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
           }
           const liveData = await response.json();
           setK8sData(liveData);
+          setError(null); // Clear any previous errors on success
         } catch (error) {
-          console.error("Could not fetch Kubernetes cluster data, falling back to mock data:", error);
-          setK8sData(mockClusterData); // Fallback to mock data on error
+          console.error("Could not fetch Kubernetes cluster data:", error.message);
+          setError(error.message); // Set the error state
+          setK8sData(mockClusterData); // Optionally fallback to mock data
         }
       };
 
       fetchClusterData();
     }, []);
+
 
     const { initialNodes, initialEdges, activeDeployment } = useMemo(() => {
         if (!k8sData) { // Guard against null k8sData

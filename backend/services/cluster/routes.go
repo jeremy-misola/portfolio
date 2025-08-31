@@ -9,6 +9,7 @@ import (
 
 	"github.com/gorilla/mux"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -49,7 +50,7 @@ func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
 			if owner.Kind == "ReplicaSet" {
 				replicaSet, _ := h.clientset.AppsV1().ReplicaSets(pod.Namespace).Get(r.Context(), owner.Name, metav1.GetOptions{})
 				rsOwner := metav1.GetControllerOf(replicaSet)
-				deploymentName = rsOwner.Name
+				deploymentName = string(rsOwner.UID)
 			}
 		}
 
@@ -102,13 +103,28 @@ func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
 
 	var serviceList []types.Service
 	for _, service := range services.Items {
+		var deploymentName string
+		selector := service.Spec.Selector
+		if len(selector) == 0 {
+			continue
+		}
+
+		for _, deployment := range deployments.Items {
+			if deployment.Spec.Selector != nil {
+				deploymentSelector := labels.Set(deployment.Spec.Selector.MatchLabels).AsSelector()
+				if deploymentSelector.Matches(labels.Set(selector)) {
+					deploymentName = string(deployment.UID)
+				}
+			}
+		}
+
 		serviceList = append(serviceList, types.Service{
 			ID:           string(service.UID),
 			Name:         service.Name,
 			Type:         string(service.Spec.Type),
 			ClusterIP:    service.Spec.ClusterIP,
-			Ports:        "test",
-			DeploymentID: "test",
+			Ports:        "8080/TCP",
+			DeploymentID: deploymentName,
 		})
 	}
 	ingresses, err := h.clientset.NetworkingV1().Ingresses("default").List(context.TODO(), metav1.ListOptions{})
