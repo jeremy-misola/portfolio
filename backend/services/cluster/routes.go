@@ -72,7 +72,7 @@ func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
 	for _, node := range nodes.Items {
 		nodeList = append(nodeList, types.Node{
 			Name:   node.Name,
-			Status: string(node.Status.Phase),
+			Status: node.Status.String(),
 		})
 	}
 
@@ -119,7 +119,6 @@ func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
 		}
 
 		serviceList = append(serviceList, types.Service{
-			ID:           string(service.UID),
 			Name:         service.Name,
 			Type:         string(service.Spec.Type),
 			ClusterIP:    service.Spec.ClusterIP,
@@ -135,6 +134,16 @@ func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
 
 	var ingressList []types.Ingress
 	for _, ingress := range ingresses.Items {
+
+		var serviceID string
+
+		rule := ingress.Spec.Rules[0].HTTP.Paths[0].Backend.Service.Name
+
+		for _, service := range services.Items {
+			if service.Name == rule {
+				serviceID = rule
+			}
+		}
 		var host string
 		if len(ingress.Spec.Rules) > 0 {
 			host = ingress.Spec.Rules[0].Host
@@ -146,11 +155,10 @@ func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ingressList = append(ingressList, types.Ingress{
-			ID:        string(ingress.UID),
 			Name:      ingress.Name,
 			Host:      host,
 			TLS:       tls,
-			ServiceID: "test",
+			ServiceID: serviceID,
 		})
 	}
 

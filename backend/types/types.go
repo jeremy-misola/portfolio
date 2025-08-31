@@ -19,7 +19,6 @@ type Pod struct {
 }
 
 type Service struct {
-	ID           string `json:"id"`
 	Name         string `json:"name"`
 	Type         string `json:"type"`
 	ClusterIP    string `json:"clusterIP"`
@@ -27,7 +26,6 @@ type Service struct {
 	DeploymentID string `json:"deploymentId"`
 }
 type Ingress struct {
-	ID        string `json:"id"`
 	Name      string `json:"name"`
 	Host      string `json:"host"`
 	TLS       bool   `json:"tls"`

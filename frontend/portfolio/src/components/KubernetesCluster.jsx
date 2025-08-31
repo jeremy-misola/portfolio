@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useMemo } from 'react'; // Import useState
+import React, { useState, useEffect, useMemo } from 'react';
 import { ReactFlow, MiniMap, Controls, Background, Handle, Position } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -9,34 +9,33 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Button } from "@/components/ui/button";
 import { Server, Cloud, Waypoints, Box, Network, CircleDot, GitCommitHorizontal } from 'lucide-react';
 
-// --- MOCK DATA (Supports Multiple Applications) ---
-const mockClusterData = {
-  serverVersion: 'v1.28.3',
-  nodes: [
-    { name: 'k8s-worker-1', status: 'Ready' },
-    { name: 'k8s-worker-2', status: 'Ready' },
-    { name: 'k8s-worker-3', status: 'Ready' },
-    { name: 'k8s-worker-4', status: 'NotReady' },
-  ],
-  deployments: [
-    { id: 'dep1', name: 'portfolio-api-deployment', replicas: { desired: 2, ready: 2 }, image: 'my-registry/portfolio-api:v1.2.5-a1b2c3d' },
-    { id: 'dep2', name: 'auth-service-deployment', replicas: { desired: 1, ready: 1 }, image: 'my-registry/auth-service:v2.1.0-e4f5g6h' },
-  ],
-  pods: [
-    { name: 'portfolio-api-deployment-67d...', node: 'k8s-worker-2', status: 'Running', deploymentId: 'dep1' },
-    { name: 'portfolio-api-deployment-95c...', node: 'k8s-worker-1', status: 'Running', deploymentId: 'dep1' },
-    { name: 'auth-service-deployment-abc...', node: 'k8s-worker-3', status: 'Running', deploymentId: 'dep2' },
-  ],
-  services: [
-    { id: 'svc1', name: 'portfolio-api-service', type: 'ClusterIP', clusterIP: '10.96.12.34', ports: '8080/TCP', deploymentId: 'dep1' },
-    { id: 'svc2', name: 'auth-service-svc', type: 'ClusterIP', clusterIP: '10.96.56.78', ports: '80/TCP', deploymentId: 'dep2' },
-  ],
-  ingresses: [
-    { id: 'ing1', name: 'portfolio-ingress', host: 'www.my-devops-portfolio.com', tls: true, serviceId: 'svc1' },
-    { id: 'ing2', name: 'auth-ingress', host: 'auth.my-app.com', tls: true, serviceId: 'svc2' },
-  ],
-  activePod: 'portfolio-api-deployment-67d...',
+// --- UPDATED MOCK DATA ---
+const newClusterData = {
+    "serverVersion": "v1.30.2+k3s1",
+    "nodes": [{"name": "k8s-control-plane-1", "status": "Ready"}], // Changed status to Ready for visuals
+    "deployments": [
+        {"id": "fb064257-159e-4bf8-9575-1c9c8a97416d", "name": "portfolio-backend-deployment", "replicas": {"desired": 3, "ready": 3}, "image": "jeremymisola/portfolio-backend:0.0.1"},
+        {"id": "4227c48b-b858-4ad0-94d3-da3763fbb8a8", "name": "portfolio-frontend-deployment", "replicas": {"desired": 3, "ready": 3}, "image": "jeremymisola/portfolio-frontend:0.0.1"}
+    ],
+    "pods": [
+        {"name": "portfolio-backend-deployment-57b88765bd-c78pv", "node": "k8s-control-plane-1", "status": "Running", "deploymentId": "fb064257-159e-4bf8-9575-1c9c8a97416d"},
+        {"name": "portfolio-backend-deployment-57b88765bd-hz7vn", "node": "k8s-control-plane-1", "status": "Running", "deploymentId": "fb064257-159e-4bf8-9575-1c9c8a97416d"},
+        {"name": "portfolio-backend-deployment-57b88765bd-nsm5g", "node": "k8s-control-plane-1", "status": "Running", "deploymentId": "fb064257-159e-4bf8-9575-1c9c8a97416d"},
+        {"name": "portfolio-frontend-deployment-677d6dd5bc-4nvhx", "node": "k8s-control-plane-1", "status": "Running", "deploymentId": "4227c48b-b858-4ad0-94d3-da3763fbb8a8"},
+        {"name": "portfolio-frontend-deployment-677d6dd5bc-l8gqz", "node": "k8s-control-plane-1", "status": "Running", "deploymentId": "4227c48b-b858-4ad0-94d3-da3763fbb8a8"},
+        {"name": "portfolio-frontend-deployment-677d6dd5bc-q7vvm", "node": "k8s-control-plane-1", "status": "Running", "deploymentId": "4227c48b-b858-4ad0-94d3-da3763fbb8a8"}
+    ],
+    "services": [
+        {"name": "portfolio-backend", "type": "ClusterIP", "clusterIP": "10.43.158.48", "ports": "8080/TCP", "deploymentId": "fb064257-159e-4bf8-9575-1c9c8a97416d"},
+        {"name": "portfolio-frontend", "type": "ClusterIP", "clusterIP": "10.43.238.39", "ports": "8080/TCP", "deploymentId": "4227c48b-b858-4ad0-94d3-da3763fbb8a8"}
+    ],
+    "ingresses": [
+        {"name": "portfolio-backend-ingress", "host": "my-portfolio-backend.com", "tls": false, "serviceId": "portfolio-backend"},
+        {"name": "portfolio-frontend-ingress", "host": "my-portfolio-frontend.com", "tls": false, "serviceId": "portfolio-frontend"}
+    ],
+    "activePod": "portfolio-frontend-deployment-677d6dd5bc-q7vvm" // Updated to a valid pod name
 };
+
 
 // --- Custom React Flow Nodes (Unchanged) ---
 const DeploymentNode = ({ data }) => (
@@ -120,7 +119,7 @@ const nodeTypes = { deployment: DeploymentNode, pod: PodNode, service: ServiceNo
 // --- Main Component ---
 export default function KubernetesClusterSection() {
 
-    const [k8sData, setK8sData] = useState(null); // Initialize with null
+    const [k8sData, setK8sData] = useState(null);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -128,17 +127,16 @@ export default function KubernetesClusterSection() {
         try {
           const response = await fetch('/api/cluster-state');
           if (!response.ok) {
-            // Capture the error message from the API route
             const errorData = await response.json();
             throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
           }
           const liveData = await response.json();
           setK8sData(liveData);
-          setError(null); // Clear any previous errors on success
+          setError(null);
         } catch (error) {
           console.error("Could not fetch Kubernetes cluster data:", error.message);
-          setError(error.message); // Set the error state
-          setK8sData(mockClusterData); // Optionally fallback to mock data
+          setError(error.message);
+          setK8sData(newClusterData); // Fallback to new mock data
         }
       };
 
@@ -147,7 +145,7 @@ export default function KubernetesClusterSection() {
 
 
     const { initialNodes, initialEdges, activeDeployment } = useMemo(() => {
-        if (!k8sData) { // Guard against null k8sData
+        if (!k8sData) {
             return { initialNodes: [], initialEdges: [], activeDeployment: null };
         }
         const nodes = [];
@@ -163,14 +161,17 @@ export default function KubernetesClusterSection() {
         k8sData.deployments.forEach((deployment, appIndex) => {
             const xPos = appIndex * horizontalSpacing;
             const service = k8sData.services.find(s => s.deploymentId === deployment.id);
-            const ingress = service ? k8sData.ingresses.find(i => i.serviceId === service.id) : null;
+            // CHANGE: Link ingress to service by name instead of id
+            const ingress = service ? k8sData.ingresses.find(i => i.serviceId === service.name) : null;
             const pods = k8sData.pods.filter(p => p.deploymentId === deployment.id);
 
             if (ingress) {
-                nodes.push({ id: `ingress-${ingress.id}`, type: 'ingress', position: { x: xPos, y: 0 }, data: { ...ingress } });
+                // CHANGE: Use ingress.name for the ID
+                nodes.push({ id: `ingress-${ingress.name}`, type: 'ingress', position: { x: xPos, y: 0 }, data: { ...ingress } });
             }
             if (service) {
-                nodes.push({ id: `service-${service.id}`, type: 'service', position: { x: xPos, y: verticalSpacing }, data: { ...service } });
+                // CHANGE: Use service.name for the ID
+                nodes.push({ id: `service-${service.name}`, type: 'service', position: { x: xPos, y: verticalSpacing }, data: { ...service } });
             }
             nodes.push({ id: `deployment-${deployment.id}`, type: 'deployment', position: { x: xPos, y: verticalSpacing * 2 }, data: { ...deployment } });
 
@@ -194,17 +195,19 @@ export default function KubernetesClusterSection() {
             });
 
             if (ingress && service) {
-                edges.push({ id: `e-ing-${ingress.id}-svc-${service.id}`, source: `ingress-${ingress.id}`, target: `service-${service.id}`, animated: true, type: 'smoothstep' });
+                // CHANGE: Use names for edge IDs and source/target
+                edges.push({ id: `e-ing-${ingress.name}-svc-${service.name}`, source: `ingress-${ingress.name}`, target: `service-${service.name}`, animated: true, type: 'smoothstep' });
             }
             if (service) {
-                edges.push({ id: `e-svc-${service.id}-dep-${deployment.id}`, source: `service-${service.id}`, target: `deployment-${deployment.id}`, animated: true, type: 'smoothstep' });
+                // CHANGE: Use service.name for edge ID and source
+                edges.push({ id: `e-svc-${service.name}-dep-${deployment.id}`, source: `service-${service.name}`, target: `deployment-${deployment.id}`, animated: true, type: 'smoothstep' });
             }
         });
         return { initialNodes: nodes, initialEdges: edges, activeDeployment };
     }, [k8sData]);
 
     if (!k8sData) {
-        return <div>Loading Cluster Data...</div>; // Or some other loading state
+        return <div>Loading Cluster Data...</div>;
     }
 
   return (
@@ -270,7 +273,8 @@ export default function KubernetesClusterSection() {
                     </CardHeader>
                     <CardContent className="text-center">
                         <Badge variant="secondary" className="font-mono text-sm break-all">
-                           {activeDeployment ? activeDeployment.image.split('-').pop() : 'N/A'}
+                           {/* CHANGE: Split image by ':' to get the version tag */}
+                           {activeDeployment ? activeDeployment.image.split(':').pop() : 'N/A'}
                         </Badge>
                     </CardContent>
                 </Card>
