@@ -1,6 +1,7 @@
 package monitoring
 
 import (
+	"backend/utils"
 	"fmt"
 	"net/http"
 
@@ -22,9 +23,14 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 }
 
 func (h *Handler) handleApplicationMetrics(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("testing")
-}
+	fmt.Println("http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090/api/v1/query?query=apiserver_request_total")
+	resp, err := http.Get("http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090/api/v1/query?query=apiserver_request_total")
+	if err != nil {
+		utils.WriteError(w, 500, err)
+	}
+	fmt.Println(resp)
 
+}
 func (h *Handler) handleStatus(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("status")
 }

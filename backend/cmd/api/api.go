@@ -5,10 +5,11 @@ import (
 	"backend/services/cluster"
 	"backend/services/monitoring"
 	"backend/services/pipeline"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
-	
+
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog/log"
 	"k8s.io/client-go/kubernetes"
@@ -27,9 +28,16 @@ func NewAPIServer(addr string, config config.Config, client *kubernetes.Clientse
 		kubeClient: client,
 	}
 }
+func healthzHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	// You can return a simple JSON response to be extra sure
+	json.NewEncoder(w).Encode(map[string]bool{"ok": true})
+}
 
 func (s *APIServer) Run() error {
 	router := mux.NewRouter()
+	router.HandleFunc("/healthz", healthzHandler).Methods("GET")
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
 	pipelineHandler := pipeline.NewHandler()

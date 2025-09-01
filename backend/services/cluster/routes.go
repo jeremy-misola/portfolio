@@ -4,7 +4,6 @@ import (
 	"backend/types"
 	"backend/utils"
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -28,7 +27,6 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 }
 
 func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("hello")
 
 	serverVersion, err := h.clientset.Discovery().ServerVersion()
 	if err != nil {
@@ -72,7 +70,7 @@ func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
 	for _, node := range nodes.Items {
 		nodeList = append(nodeList, types.Node{
 			Name:   node.Name,
-			Status: node.Status.String(),
+			Status: string(node.Status.Phase),
 		})
 	}
 

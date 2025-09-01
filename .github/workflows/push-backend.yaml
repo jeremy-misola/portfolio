@@ -22,4 +22,4 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
         
       - name: Build and Push Multi-PlatformImage
-        run: docker buildx build --platform linux/amd64,linux/arm64 -f backend/Dockerfile -t jeremymisola/portfolio-backend:0.0.1 --push ./backend
+        run: docker buildx build --platform linux/amd64 -f backend/Dockerfile -t jeremymisola/portfolio-backend:0.0.1 --push ./backend
