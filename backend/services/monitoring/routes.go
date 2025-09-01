@@ -28,7 +28,7 @@ func (h *Handler) handleApplicationMetrics(w http.ResponseWriter, r *http.Reques
 	if err != nil {
 		utils.WriteError(w, 500, err)
 	}
-	fmt.Println(resp)
+	fmt.Println(resp.Body)
 
 }
 func (h *Handler) handleStatus(w http.ResponseWriter, r *http.Request) {
