@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Bot, Cloud, Layers, Linkedin, FileText } from 'lucide-react';
+import { Bot, Layers, Linkedin, FileText, Github } from 'lucide-react'; // Removed Cloud icon
 
 // --- Centralized Animation Configuration ---
 const elegantEase = [0.22, 1, 0.36, 1]; // A gentle, fast-to-slow ease
@@ -38,16 +38,12 @@ const animations = {
 };
 
 // --- Data Arrays for Cleaner Mapping ---
+// Updated philosophies to remove the "Cloud-Native" section
 const philosophies = [
   {
     icon: <Bot size={28} />,
     title: "Automation First",
     description: "I strive to automate everything from CI/CD pipelines to infrastructure provisioning, reducing manual effort and ensuring repeatable consistency."
-  },
-  {
-    icon: <Cloud size={28} />,
-    title: "Cloud-Native by Design",
-    description: "I leverage the power of the cloud to architect and build robust, fault-tolerant, and scalable systems that are prepared for modern demands."
   },
   {
     icon: <Layers size={28} />,
@@ -56,7 +52,12 @@ const philosophies = [
   }
 ];
 
-const skills = ['Kubernetes', 'Docker', 'Go (Golang)', 'Ansible', 'Prometheus', 'Grafana', 'ArgoCD', 'GitHub Actions', 'React', 'PostgreSQL', 'AWS', 'GitOps'];
+// Extracted directly from your CV's Technical Skills section, removed AWS
+const skills = [
+    'Kubernetes', 'Docker', 'Ansible', 'Prometheus', 'Grafana', 
+    'GitHub Actions', 'Git', 'ArgoCD', 'Proxmox', 'Go', 'Python', 
+    'Java', 'SQL (MySQL)', 'HTML/CSS', 'React', 'Flask', 'Spring Boot', 'JUnit'
+];
 
 // --- Sub-Components for Elegance ---
 const PhilosophyItem = ({ icon, title, description }) => (
@@ -92,21 +93,32 @@ const AboutMe = () => {
           >
             <motion.div whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}>
               <Avatar className="w-56 h-56 border-8 border-background shadow-2xl">
-                <AvatarImage src="https://github.com/shadcn.png" alt="Your Name" />
-                <AvatarFallback>ME</AvatarFallback>
+                {/* You can update the src to a direct link of your profile picture */}
+                <AvatarImage src="https://github.com/jeremy-misola.png" alt="Jeremy Misola" />
+                <AvatarFallback>JM</AvatarFallback>
               </Avatar>
             </motion.div>
-            <h2 className="mt-8 text-4xl font-bold tracking-tight">Your Name</h2>
-            <p className="mt-2 text-xl text-muted-foreground">DevOps & Cloud Engineer</p>
+            <h2 className="mt-8 text-4xl font-bold tracking-tight">Jeremy Misola</h2>
+            <p className="mt-2 text-xl text-muted-foreground">Computer Science Student</p>
             
             <div className="mt-10 w-full max-w-xs space-y-4">
               <Button size="lg" className="w-full" asChild>
-                <a href="https://linkedin.com/in/your-profile" target="_blank" rel="noopener noreferrer">
+                <a href="https://linkedin.com/in/jeremy-misola-969402302" target="_blank" rel="noopener noreferrer">
                   <Linkedin className="mr-2 h-5 w-5" /> Connect on LinkedIn
                 </a>
               </Button>
+               <Button size="lg" className="w-full" asChild>
+                <a href="https://github.com/jeremy-misola" target="_blank" rel="noopener noreferrer">
+                  <Github className="mr-2 h-5 w-5" /> Follow on GitHub
+                </a>
+              </Button>
               <Button size="lg" variant="secondary" className="w-full" asChild>
-                 <a href="/path-to-your-resume.pdf" download>
+                 {/* This link now points to your Google Drive file */}
+                 <a 
+                   href="https://drive.google.com/file/d/1GYgIXuIZkpDb7fCmXeuIaaxVUUSQ8DWC/view?usp=sharing" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                 >
                   <FileText className="mr-2 h-5 w-5" /> Download Resume
                 </a>
               </Button>
@@ -117,10 +129,11 @@ const AboutMe = () => {
           <div className="lg:col-span-8">
             <motion.div className="mb-24" variants={animations.item}>
               <h1 className="text-6xl font-bold tracking-tighter text-foreground leading-tight mb-8">
-                Building Bridges Between Code and Cloud.
+                Building Resilient, Scalable Systems.
               </h1>
+              {/* This summary is adapted from your CV */}
               <p className="text-xl text-muted-foreground leading-loose">
-                Hello! I'm a passionate DevOps engineer dedicated to creating resilient, scalable, and highly automated infrastructure. My work empowers development teams to innovate faster and more reliably. I believe in a culture of collaboration and continuous improvement, where the operational backbone of an application is as elegant as its code.
+                Hello! I'm a final-year Computer Science student with a deep passion for DevOps principles. I am seeking a challenging role where I can leverage my skills in Kubernetes, infrastructure automation, and CI/CD to build and maintain the highly available, resilient backbone that modern applications require.
               </p>
             </motion.div>
 
@@ -142,7 +155,7 @@ const AboutMe = () => {
               viewport={{ once: true, amount: 0.2 }}
               variants={animations.scrollReveal}
             >
-              <h3 className="text-3xl font-bold tracking-tight mb-8">Core Competencies</h3>
+              <h3 className="text-3xl font-bold tracking-tight mb-8">Technical Skills</h3>
               <div className="flex flex-wrap gap-4">
                 {skills.map((skill) => (
                   <motion.div key={skill} whileHover={{ y: -5, transition: { duration: 0.2 } }}>

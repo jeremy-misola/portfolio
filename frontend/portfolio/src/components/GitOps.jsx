@@ -1,14 +1,11 @@
 "use client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ReactFlow, MiniMap, Controls, Background, Handle, Position } from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
 import {
     BarChart, Bar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
     XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, AreaChart, Area
 } from 'recharts';
-import { GitBranch, Layers, BarChart2, GitCommit, GitPullRequest, Tag, Bug, FileCode, Users, GitMerge, Timer } from 'lucide-react';
-import { memo } from 'react';
+import { Layers, BarChart2, GitCommit, GitPullRequest, FileCode, Users, GitMerge, Timer } from 'lucide-react';
 
 // --- Mock Data for Charts ---
 const mockPipelineData = {
@@ -63,47 +60,6 @@ const CustomTooltip = ({ active, payload, label }) => {
     return null;
 };
 
-// --- Custom Nodes for React Flow ---
-const BranchNode = memo(({ data }) => {
-    const icons = {
-        main: <GitBranch className="h-5 w-5 mr-2" />,
-        develop: <GitCommit className="h-5 w-5 mr-2" />,
-        feature: <GitPullRequest className="h-5 w-5 mr-2" />,
-        release: <Tag className="h-5 w-5 mr-2" />,
-        hotfix: <Bug className="h-5 w-5 mr-2" />,
-    };
-
-    return (
-        <div className="flex items-center p-2 rounded-md" style={{ background: data.style.background, color: data.style.color }}>
-            {icons[data.type]}
-            <span>{data.label}</span>
-            <Handle type="source" position={Position.Bottom} />
-            <Handle type="target" position={Position.Top} />
-        </div>
-    );
-});
-
-const nodeTypes = {
-    branchNode: BranchNode,
-};
-
-// --- Git Workflow Data ---
-const gitWorkflowNodes = [
-    { id: 'main', type: 'branchNode', data: { label: 'main', type: 'main', style: { background: 'var(--chart-3)', color: 'var(--foreground)' } }, position: { x: 250, y: 0 } },
-    { id: 'develop', type: 'branchNode', data: { label: 'develop', type: 'develop', style: { background: 'var(--chart-5)', color: 'var(--foreground)' } }, position: { x: 250, y: 120 } },
-    { id: 'feature', type: 'branchNode', data: { label: 'feature/new-auth', type: 'feature', style: { background: 'var(--accent)', color: 'var(--accent-foreground)' } }, position: { x: 50, y: 240 } },
-    { id: 'release', type: 'branchNode', data: { label: 'release/v1.1.0', type: 'release', style: { background: 'var(--primary)', color: 'var(--primary-foreground)' } }, position: { x: 450, y: 240 } },
-    { id: 'hotfix', type: 'branchNode', data: { label: 'hotfix/bug-fix', type: 'hotfix', style: { background: 'var(--destructive)', color: 'var(--destructive-foreground)' } }, position: { x: 50, y: 0 } },
-];
-const gitWorkflowEdges = [
-    { id: 'e-dev-main', source: 'develop', target: 'main', animated: true, label: 'Merge to main' },
-    { id: 'e-feat-dev', source: 'feature', target: 'develop', animated: true, label: 'PR to develop' },
-    { id: 'e-rel-main', source: 'release', target: 'main', animated: true, label: 'Merge to main' },
-    { id: 'e-rel-dev', source: 'release', target: 'develop', type: 'straight' },
-    { id: 'e-hotfix-main', source: 'hotfix', target: 'main', animated: true, label: 'Urgent Fix' },
-];
-
-
 export default function GitOpsShowcase() {
     return (
         <section id="gitops" className="w-full scroll-mt-24">
@@ -113,40 +69,13 @@ export default function GitOpsShowcase() {
                 <CardDescription style={{ color: 'var(--muted-foreground)' }}>An inside look into the architecture and processes that build and deploy this website.</CardDescription>
             </CardHeader>
             <CardContent>
-                <Tabs defaultValue="git" className="w-full">
-                    {/* Updated TabsList to include three tabs */}
-                    <TabsList className="grid w-full grid-cols-1 md:grid-cols-3">
-                        <TabsTrigger value="git"><GitBranch className="mr-2 h-4 w-4" />Git Workflow</TabsTrigger>
+                <Tabs defaultValue="repository" className="w-full">
+                    <TabsList className="grid w-full grid-cols-1 md:grid-cols-2">
                         <TabsTrigger value="repository"><BarChart2 className="mr-2 h-4 w-4" />Repository Analytics</TabsTrigger>
                         <TabsTrigger value="pipeline"><GitMerge className="mr-2 h-4 w-4" />Pipeline Analytics</TabsTrigger>
                     </TabsList>
-
-                    {/* Git Workflow Tab */}
-                    <TabsContent value="git">
-                        <div className="mt-4 grid md:grid-cols-2 gap-6 items-start">
-                            <div className="p-4 rounded-lg" style={{ border: '1px solid var(--border)' }}>
-                                <h3 className="text-2xl font-semibold mb-4">Feature Branch Workflow</h3>
-                                <p className="mb-4" style={{ color: 'var(--muted-foreground)' }}>
-                                    This diagram shows the Git branching strategy. All development starts from a feature branch, is reviewed via a Pull Request into `develop`, and then promoted to `main` through a release process. This ensures code quality and a stable main branch.
-                                </p>
-                            </div>
-                            <div className="h-[500px] rounded-lg" style={{ border: '1px solid var(--border)' }}>
-                                <ReactFlow
-                                    defaultNodes={gitWorkflowNodes}
-                                    defaultEdges={gitWorkflowEdges}
-                                    nodeTypes={nodeTypes}
-                                    defaultViewport={{ zoom: 1, x: 0, y: 50 }}
-                                    fitView
-                                >
-                                    <MiniMap />
-                                    <Controls />
-                                    <Background color="var(--muted)" gap={16} />
-                                </ReactFlow>
-                            </div>
-                        </div>
-                    </TabsContent>
                     
-                    {/* NEW: Repository Analytics Tab */}
+                    {/* Repository Analytics Tab */}
                     <TabsContent value="repository">
                         <div className="grid gap-6 mt-6 md:grid-cols-2 lg:grid-cols-3">
                              <Card className="lg:col-span-2" style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
@@ -205,7 +134,7 @@ export default function GitOpsShowcase() {
                         </div>
                     </TabsContent>
                     
-                    {/* UPDATED: Pipeline Analytics Tab */}
+                    {/* Pipeline Analytics Tab */}
                     <TabsContent value="pipeline">
                         <div className="grid gap-6 mt-6 md:grid-cols-2 lg:grid-cols-3">
                              <Card className="lg:col-span-2" style={{ backgroundColor: 'var(--card)', color: 'var(--card-foreground)' }}>
