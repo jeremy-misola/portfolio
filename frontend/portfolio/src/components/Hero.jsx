@@ -44,19 +44,6 @@ function Hero() {
         </Button>
       </motion.div>
 
-      {/* Placeholder for a more advanced visual component */}
-      <motion.div 
-        className="mt-16 h-64 w-full flex items-center justify-center"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.7, delay: 0.6 }}
-      >
-        <div className="w-full max-w-4xl h-full bg-grid-black/[0.05] dark:bg-grid-white/[0.05] border rounded-xl shadow-lg flex items-center justify-center">
-            <p className="text-muted-foreground">
-                [Interactive Globe/Cluster Visualization Here]
-            </p>
-        </div>
-      </motion.div>
     </section>
   );
 }
