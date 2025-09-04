@@ -16,12 +16,10 @@ import { Badge } from "@/components/ui/badge";
 import {
   Github,
   Server,
-  PackageCheck,
   ShieldCheck,
-  Settings2,
   Terminal,
   ArrowRight,
-  FileCode,
+  UserPlus,
 } from "lucide-react";
 
 // --- Data for the component ---
@@ -30,56 +28,57 @@ const configSteps = [
   {
     icon: <ShieldCheck className="h-8 w-8 text-primary" />,
     title: "System Hardening",
-    description: "Applied security policies and system-wide updates.",
+    description: "Run system-wide updates to keep servers patched and secure.",
   },
   {
-    icon: <PackageCheck className="h-8 w-8 text-primary" />,
-    title: "Install Runtimes",
-    description: "Automated the installation of the containerd runtime.",
-  },
-  {
-    icon: <Settings2 className="h-8 w-8 text-primary" />,
-    title: "Configure Kernel",
-    description: "Set required kernel parameters for Kubernetes networking.",
-  },
-  {
-    icon: <FileCode className="h-8 w-8 text-primary" />,
-    title: "Add K8s Repo",
-    description: "Configured the APT repository for Kubernetes binaries.",
+    icon: <UserPlus className="h-8 w-8 text-primary" />,
+    title: "User Management",
+    description: "Easily add new administrative users with SSH access.",
   },
 ];
 
 const codeSnippets = {
-  packages: `
-- name: Install prerequisite packages
-  apt:
-    name:
-      - containerd
-      - apt-transport-https
-      - ca-certificates
-    state: present
-    update_cache: yes
+  addUser: `
+---
+- name: Add a new user
+  hosts: all
+  become: yes
+
+  vars_prompt:
+    - name: "username"
+      prompt: "Enter the username"
+      private: no
+    - name: "ssh_key"
+      prompt: "Paste the user's public SSH key"
+      private: no
+
+  tasks:
+    - name: Create a new user with sudo privileges
+      ansible.builtin.user:
+        name: "{{ username }}"
+        state: present
+        groups: sudo
+        append: yes
+        create_home: yes
+        shell: /bin/bash
+
+    - name: Add SSH key for the new user
+      ansible.posix.authorized_key:
+        user: "{{ username }}"
+        key: "{{ ssh_key }}"
+        state: present
 `,
-  kernel: `
-- name: Load required kernel modules
-  modprobe:
-    name: "{{ item }}"
-    state: present
-  loop:
-    - overlay
-    - br_netfilter
-`,
-  sysctl: `
-- name: Set required sysctl params for Kubernetes
-  sysctl:
-    name: "{{ item.key }}"
-    value: "{{ item.value }}"
-    sysctl_set: yes
-    state: present
-    reload: yes
-  with_items:
-    - { key: 'net.bridge.bridge-nf-call-iptables', value: '1' }
-    - { key: 'net.ipv4.ip_forward', value: '1' }
+  updateServers: `
+---
+- name: Update all servers
+  hosts: all
+  become: yes  # Use 'sudo' to run the command
+
+  tasks:
+    - name: Update apt cache and upgrade all packages
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: dist
 `,
 };
 
@@ -101,18 +100,18 @@ export default function Ansible() {
             Terraform + Ansible
           </Badge>
           <h2 className="font-sans text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Configuring the Nodes with Ansible
+            Automating Server Administration with Ansible
           </h2>
           <p className="mx-auto mt-4 max-w-3xl text-lg text-muted-foreground">
-            After provisioning the VMs with{" "}
+            After provisioning VMs with{" "}
             <span className="font-semibold text-primary/90">Terraform</span>,
-            Ansible configures each node to be a production-ready baseline for
-            Kubernetes.
+            Ansible handles ongoing server administration tasks like user management
+            and system updates.
           </p>
         </div>
 
         {/* Configuration Steps Grid */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto grid max-w-2xl grid-cols-1 gap-6 sm:grid-cols-2">
           {configSteps.map((step) => (
             <Card
               key={step.title}
@@ -137,33 +136,40 @@ export default function Ansible() {
 
         {/* Interactive Code Snippets */}
         <div className="mt-16 flex justify-center">
-          <Tabs defaultValue="packages" className="w-full max-w-2xl">
+          <Tabs defaultValue="addUser" className="w-full max-w-2xl">
             <div className="flex items-center justify-center">
               <Terminal className="mr-3 h-6 w-6 text-muted-foreground" />
-              <TabsList>
-                <TabsTrigger value="packages">Install Packages</TabsTrigger>
-                <TabsTrigger value="kernel">Kernel Modules</TabsTrigger>
-                <TabsTrigger value="sysctl">Network Params</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="addUser">Add User</TabsTrigger>
+                <TabsTrigger value="updateServers">System Update</TabsTrigger>
               </TabsList>
             </div>
-            <TabsContent value="packages">
+            <TabsContent value="addUser">
               <Card className="border-border/60 shadow-md">
+                <CardHeader>
+                  <CardTitle>On-Demand User Creation</CardTitle>
+                  <CardDescription>
+                    This playbook prompts for a username and a public SSH key to
+                    create a new sudo-enabled user on all servers, simplifying
+                    access management.
+                  </CardDescription>
+                </CardHeader>
                 <CardContent className="p-0">
-                  <CodeBlock>{codeSnippets.packages}</CodeBlock>
+                  <CodeBlock>{codeSnippets.addUser}</CodeBlock>
                 </CardContent>
               </Card>
             </TabsContent>
-            <TabsContent value="kernel">
+            <TabsContent value="updateServers">
               <Card className="border-border/60 shadow-md">
+                <CardHeader>
+                  <CardTitle>Centralized System Updates</CardTitle>
+                  <CardDescription>
+                    Run this simple playbook to update the package cache and
+                    upgrade all packages on every server in your inventory.
+                  </CardDescription>
+                </CardHeader>
                 <CardContent className="p-0">
-                  <CodeBlock>{codeSnippets.kernel}</CodeBlock>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="sysctl">
-              <Card className="border-border/60 shadow-md">
-                <CardContent className="p-0">
-                  <CodeBlock>{codeSnippets.sysctl}</CodeBlock>
+                  <CodeBlock>{codeSnippets.updateServers}</CodeBlock>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -191,4 +197,4 @@ export default function Ansible() {
       </div>
     </section>
   );
-};
+}
