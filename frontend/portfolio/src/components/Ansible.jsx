@@ -176,7 +176,6 @@ export default function Ansible() {
           </Tabs>
         </div>
 
-        {/* Call to Action Button */}
         <div className="mt-16 text-center">
           <Button
             asChild
