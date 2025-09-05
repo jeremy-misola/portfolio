@@ -1,10 +1,10 @@
-# Living Portfolio - Enterprise DevOps & Cloud-Native Architecture
+# Living Portfolio - DevOps Architecture
 
 > **A production-grade, self-updating portfolio demonstrating enterprise DevOps practices, Kubernetes orchestration, infrastructure automation, and modern full-stack development.**
 
 ## 🌐 Live Website
 
-**[jeremymr.dev](https://jeremymr.dev)** - **Visit the live portfolio now!**
+**[jeremymr.dev](https://jeremymr.dev)** - **The website is currently down due to a power outage lasting until midnight tomorrow**
 
 [![Website](https://img.shields.io/badge/Website-jeremymr.dev-blue?style=for-the-badge&logo=globe)](https://jeremymr.dev)
 [![Status](https://img.shields.io/badge/Status-Live%20Production-brightgreen?style=for-the-badge&logo=check-circle)](https://jeremymr.dev)
