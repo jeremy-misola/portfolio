@@ -4,7 +4,7 @@
 
 ## 🌐 Live Website
 
-**[jeremymr.dev](https://jeremymr.dev)** - **The website is currently down due to a power outage lasting until midnight tomorrow**
+**[jeremymr.dev](https://jeremymr.dev)** - **Visit the website now!**
 
 [![Website](https://img.shields.io/badge/Website-jeremymr.dev-blue?style=for-the-badge&logo=globe)](https://jeremymr.dev)
 [![Status](https://img.shields.io/badge/Status-Live%20Production-brightgreen?style=for-the-badge&logo=check-circle)](https://jeremymr.dev)
