@@ -128,6 +128,14 @@ export default function MonitoringDashboardWithTabs() {
           <p className="mt-2 max-w-2xl mx-auto" style={{ color: 'var(--muted-foreground)' }}>
             This dashboard provides a real-time view into the application's live performance and infrastructure health, served by a Go meta-API.
           </p>
+          {/* --- ADDED NOTE --- */}
+          <div className="mt-4 flex items-center justify-center">
+            <Badge variant="outline" className="text-sm font-normal p-2" style={{ color: 'var(--muted-foreground)', borderColor: 'var(--border)' }}>
+                <Info className="h-4 w-4 mr-2" />
+                Note: The data on this dashboard is hardcoded for demonstration purposes. I am working on integrating the frontend that comes with this.
+            </Badge>
+          </div>
+          {/* --- END OF ADDED NOTE --- */}
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 mb-8">
@@ -307,6 +315,7 @@ export default function MonitoringDashboardWithTabs() {
                                       <p className="text-muted-foreground">{event.message}</p>
                                     </div>
                                 </div>
+                                {/* FIX: Changed 'a' to 'apiData' to correctly reference the array being mapped */}
                                 {index < apiData.k8sEvents.length - 1 && <Separator className="my-4" />}
                             </div>
                         ))}

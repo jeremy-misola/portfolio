@@ -167,7 +167,7 @@ func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
 		Pods:          podList,
 		Services:      serviceList,
 		Ingresses:     ingressList,
-		ActivePod:     "test",
+		ActivePod:     "b1a82198dad1cafb21a142f7bead3bc4eb2ef169",
 	}
 
 	utils.WriteJSON(w, 200, response)

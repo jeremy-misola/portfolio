@@ -5,7 +5,9 @@ import {
     BarChart, Bar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
     XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, AreaChart, Area
 } from 'recharts';
-import { Layers, BarChart2, GitCommit, GitPullRequest, FileCode, Users, GitMerge, Timer } from 'lucide-react';
+import { Layers, BarChart2, GitCommit, GitPullRequest, FileCode, Users, GitMerge, Timer, Info } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+
 
 // --- Mock Data for Charts ---
 const mockPipelineData = {
@@ -67,6 +69,14 @@ export default function GitOpsShowcase() {
             <CardHeader>
                 <CardTitle className="text-3xl font-bold flex items-center"><Layers style={{ color: 'var(--primary)' }} className="mr-2 h-8 w-8" /> My DevOps Workflow</CardTitle>
                 <CardDescription style={{ color: 'var(--muted-foreground)' }}>An inside look into the architecture and processes that build and deploy this website.</CardDescription>
+                {/* --- ADDED NOTE --- */}
+                <div className="pt-4">
+                    <Badge variant="outline" className="text-sm font-normal p-2" style={{ color: 'var(--muted-foreground)', borderColor: 'var(--border)' }}>
+                        <Info className="h-4 w-4 mr-2" />
+                        Note: All analytics data is also hardcoded for demonstration purposes.
+                    </Badge>
+                </div>
+                {/* --- END OF ADDED NOTE --- */}
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue="repository" className="w-full">
