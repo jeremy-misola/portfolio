@@ -27,7 +27,6 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 }
 
 func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
-
 	serverVersion, err := h.clientset.Discovery().ServerVersion()
 	if err != nil {
 		utils.WriteError(w, 500, err)
@@ -171,5 +170,4 @@ func (h *Handler) handleClusterState(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.WriteJSON(w, 200, response)
-
 }
