@@ -1,16 +1,25 @@
 package main
 
 import (
-	"net/http"
-
 	"backendV2/internal/handler"
+	"backendV2/internal/platform"
+	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	kubeClient, err := platform.CreateKubeClient()
+	if err != nil {
+		log.Fatal("couldn't get kubernetes client")
+	}
+	kubernetesHandler := handler.NewKubernetesHandler(kubeClient)
+
 	router := gin.Default()
-	router.GET("/api/v2/cluster-state", handler.GetClusterState)
+
+	router.GET("/", homePage)
+	router.GET("/api/v2/cluster-state", kubernetesHandler.GetClusterState)
 	router.Run()
 }
 

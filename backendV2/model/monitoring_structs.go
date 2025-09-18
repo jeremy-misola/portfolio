@@ -1,4 +1,4 @@
-package types
+package model
 
 type DashboardData struct {
 	InfraStatus     InfraStatus          `json:"infraStatus"`

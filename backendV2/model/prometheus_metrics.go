@@ -1,4 +1,4 @@
-package types
+package model
 
 import (
 	"github.com/prometheus/client_golang/prometheus"
