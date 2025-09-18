@@ -7,11 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ClusterHandler struct {
-	clusterStateRetriever ClusterStateRetriever
+type ClusterController struct {
+	ClusterStateServiceImpl ClusterStateServiceImpl
 }
 
-type ClusterStateRetriever interface {
+type ClusterStateServiceImpl interface {
 	GetServerVersion() (string, error)
 	GetNodes() ([]model.Node, error)
 	GetDeployments() ([]model.Deployment, error)
@@ -20,43 +20,43 @@ type ClusterStateRetriever interface {
 	GetIngresses() ([]model.Ingress, error)
 }
 
-func NewKubernetesHandler(ClusterStateRetriever ClusterStateRetriever) *ClusterHandler {
-	return &ClusterHandler{
-		clusterStateRetriever: ClusterStateRetriever,
+func NewKubernetesHandler(clusterStateServiceImpl ClusterStateServiceImpl) *ClusterController {
+	return &ClusterController{
+		ClusterStateServiceImpl: clusterStateServiceImpl,
 	}
 }
 
-func (h *ClusterHandler) GetClusterState(c *gin.Context) {
-	serverVersion, err := h.clusterStateRetriever.GetServerVersion()
+func (h *ClusterController) GetClusterState(c *gin.Context) {
+	serverVersion, err := h.ClusterStateServiceImpl.GetServerVersion()
 	if err != nil {
 		utils.WriteError(c, 500, err)
 		return
 	}
 
-	podList, err := h.clusterStateRetriever.GetPods()
+	podList, err := h.ClusterStateServiceImpl.GetPods()
 	if err != nil {
 		utils.WriteJSON(c, 500, err)
 		return
 	}
-	nodeList, err := h.clusterStateRetriever.GetNodes()
+	nodeList, err := h.ClusterStateServiceImpl.GetNodes()
 	if err != nil {
 		utils.WriteError(c, 500, err)
 		return
 	}
 
-	deploymentList, err := h.clusterStateRetriever.GetDeployments()
+	deploymentList, err := h.ClusterStateServiceImpl.GetDeployments()
 	if err != nil {
 		utils.WriteError(c, 500, err)
 		return
 	}
 
-	serviceList, err := h.clusterStateRetriever.GetServices()
+	serviceList, err := h.ClusterStateServiceImpl.GetServices()
 	if err != nil {
 		utils.WriteError(c, 500, err)
 		return
 	}
 
-	ingressList, err := h.clusterStateRetriever.GetIngresses()
+	ingressList, err := h.ClusterStateServiceImpl.GetIngresses()
 	if err != nil {
 		utils.WriteError(c, 500, err)
 		return

@@ -14,26 +14,17 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
-type ClusterStateRetriever interface {
-	GetServerVersion() (string, error)
-	GetNodes() ([]model.Node, error)
-	GetDeployments() ([]model.Deployment, error)
-	GetPods() ([]model.Pod, error)
-	GetServices() ([]model.Service, error)
-	GetIngresses() ([]model.Ingress, error)
-}
-
-type ClusterStateRetrieverImpl struct {
+type ClusterStateServiceImpl struct {
 	clientset *kubernetes.Clientset
 }
 
-func NewKubernetesService(kubeClient *kubernetes.Clientset) *ClusterStateRetrieverImpl {
-	return &ClusterStateRetrieverImpl{
+func NewKubernetesService(kubeClient *kubernetes.Clientset) *ClusterStateServiceImpl {
+	return &ClusterStateServiceImpl{
 		clientset: kubeClient,
 	}
 }
 
-func (s *ClusterStateRetrieverImpl) retrieveDeploymentObjectList() (*v1.DeploymentList, error) {
+func (s *ClusterStateServiceImpl) retrieveDeploymentObjectList() (*v1.DeploymentList, error) {
 	deployments, err := s.clientset.AppsV1().Deployments("default").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
@@ -41,7 +32,7 @@ func (s *ClusterStateRetrieverImpl) retrieveDeploymentObjectList() (*v1.Deployme
 	return deployments, nil
 }
 
-func (s *ClusterStateRetrieverImpl) retrieveServiceObjectList() (*network.ServiceList, error) {
+func (s *ClusterStateServiceImpl) retrieveServiceObjectList() (*network.ServiceList, error) {
 	services, err := s.clientset.CoreV1().Services("default").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
@@ -49,12 +40,12 @@ func (s *ClusterStateRetrieverImpl) retrieveServiceObjectList() (*network.Servic
 	return services, nil
 }
 
-func (s *ClusterStateRetrieverImpl) GetServerVersion() (string, error) {
+func (s *ClusterStateServiceImpl) GetServerVersion() (string, error) {
 	serverVersion, err := s.clientset.Discovery().ServerVersion()
 	return serverVersion.String(), err
 }
 
-func (s *ClusterStateRetrieverImpl) GetNodes() ([]model.Node, error) {
+func (s *ClusterStateServiceImpl) GetNodes() ([]model.Node, error) {
 	nodes, err := s.clientset.CoreV1().Nodes().List(&gin.Context{}, metav1.ListOptions{})
 	if err != nil {
 		return nil, err
@@ -70,7 +61,7 @@ func (s *ClusterStateRetrieverImpl) GetNodes() ([]model.Node, error) {
 	return nodeList, err
 }
 
-func (s *ClusterStateRetrieverImpl) GetDeployments() ([]model.Deployment, error) {
+func (s *ClusterStateServiceImpl) GetDeployments() ([]model.Deployment, error) {
 	deployments, err := s.retrieveDeploymentObjectList()
 
 	var deploymentList []model.Deployment
@@ -89,7 +80,7 @@ func (s *ClusterStateRetrieverImpl) GetDeployments() ([]model.Deployment, error)
 	return deploymentList, err
 }
 
-func (s *ClusterStateRetrieverImpl) GetPods() ([]model.Pod, error) {
+func (s *ClusterStateServiceImpl) GetPods() ([]model.Pod, error) {
 	pods, err := s.clientset.CoreV1().Pods("default").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
@@ -101,7 +92,7 @@ func (s *ClusterStateRetrieverImpl) GetPods() ([]model.Pod, error) {
 		owner := metav1.GetControllerOf(&pod)
 		if owner != nil {
 			if owner.Kind == "ReplicaSet" {
-				replicaSet, _ := h.clientset.AppsV1().ReplicaSets(pod.Namespace).Get(&gin.Context{}, owner.Name, metav1.GetOptions{})
+				replicaSet, _ := s.clientset.AppsV1().ReplicaSets(pod.Namespace).Get(&gin.Context{}, owner.Name, metav1.GetOptions{})
 				rsOwner := metav1.GetControllerOf(replicaSet)
 				deploymentName = string(rsOwner.UID)
 			}
@@ -117,7 +108,7 @@ func (s *ClusterStateRetrieverImpl) GetPods() ([]model.Pod, error) {
 	return podList, err
 }
 
-func (s *ClusterStateRetrieverImpl) GetServices() ([]model.Service, error) {
+func (s *ClusterStateServiceImpl) GetServices() ([]model.Service, error) {
 	deployments, _ := s.retrieveDeploymentObjectList()
 	services, err := s.clientset.CoreV1().Services("default").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
@@ -152,7 +143,7 @@ func (s *ClusterStateRetrieverImpl) GetServices() ([]model.Service, error) {
 	return serviceList, nil
 }
 
-func (s *ClusterStateRetrieverImpl) GetIngresses() ([]model.Ingress, error) {
+func (s *ClusterStateServiceImpl) GetIngresses() ([]model.Ingress, error) {
 	services, err := s.retrieveServiceObjectList()
 	ingresses, err := s.clientset.NetworkingV1().Ingresses("default").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {

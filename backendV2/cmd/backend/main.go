@@ -3,6 +3,7 @@ package main
 import (
 	"backendV2/internal/handler"
 	"backendV2/internal/platform"
+	"backendV2/internal/service"
 	"log"
 	"net/http"
 
@@ -14,7 +15,8 @@ func main() {
 	if err != nil {
 		log.Fatal("couldn't get kubernetes client")
 	}
-	kubernetesHandler := handler.NewKubernetesHandler(kubeClient)
+	kubernetesService := service.NewKubernetesService(kubeClient)
+	kubernetesHandler := handler.NewKubernetesHandler(kubernetesService)
 
 	router := gin.Default()
 
