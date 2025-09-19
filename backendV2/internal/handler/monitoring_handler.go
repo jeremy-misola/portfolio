@@ -7,14 +7,14 @@ import (
 )
 
 type MonitoringController struct {
-	monitoringServiceImpl MonitoringServiceImpl
+	monitoringServiceImpl MonitoringService
 }
 
-type MonitoringServiceImpl interface {
+type MonitoringService interface {
 	SayHello() string
 }
 
-func NewMonitoringHandler(monitoringServiceImpl MonitoringServiceImpl) *MonitoringController {
+func NewMonitoringHandler(monitoringServiceImpl MonitoringService) *MonitoringController {
 	return &MonitoringController{
 		monitoringServiceImpl: monitoringServiceImpl,
 	}
@@ -23,4 +23,9 @@ func NewMonitoringHandler(monitoringServiceImpl MonitoringServiceImpl) *Monitori
 func (h *MonitoringController) ReturnHello(c *gin.Context) {
 	myString := h.monitoringServiceImpl.SayHello()
 	utils.WriteJSON(c, 200, myString)
+}
+
+func (h *MonitoringController) GetTrafficDistribution(c *gin.Context) {
+	trafficDistribution := h.MonitoringServiceImpl.GetTrafficDistribution()
+	utils.WriteJSON(c, 200, trafficDistribution)
 }

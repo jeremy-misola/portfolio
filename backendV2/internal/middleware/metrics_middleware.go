@@ -3,6 +3,8 @@ package middleware
 import (
 	"backendV2/model"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Metrics(next http.Handler) http.Handler {
@@ -11,4 +13,12 @@ func Metrics(next http.Handler) http.Handler {
 		path := r.URL.Path
 		model.HTTPRequestsTotal.WithLabelValues(path).Inc()
 	})
+}
+
+func MetricsGin() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Next()
+		path := c.Request.URL.Path
+		model.HTTPRequestsTotal.WithLabelValues(path)
+	}
 }

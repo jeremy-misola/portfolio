@@ -8,10 +8,10 @@ import (
 )
 
 type ClusterController struct {
-	ClusterStateServiceImpl ClusterStateServiceImpl
+	ClusterStateServiceImpl ClusterStateService
 }
 
-type ClusterStateServiceImpl interface {
+type ClusterStateService interface {
 	GetServerVersion() (string, error)
 	GetNodes() ([]model.Node, error)
 	GetDeployments() ([]model.Deployment, error)
@@ -20,7 +20,7 @@ type ClusterStateServiceImpl interface {
 	GetIngresses() ([]model.Ingress, error)
 }
 
-func NewKubernetesHandler(clusterStateServiceImpl ClusterStateServiceImpl) *ClusterController {
+func NewKubernetesHandler(clusterStateServiceImpl ClusterStateService) *ClusterController {
 	return &ClusterController{
 		ClusterStateServiceImpl: clusterStateServiceImpl,
 	}
