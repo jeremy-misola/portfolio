@@ -1,0 +1,36 @@
+[
+  {
+    "id": "1",
+    "company": "Kleff Hosting",
+    "position_en": "Backend & Platform Developer | Contract",
+    "position_fr": "Développeur Backend & Plateforme | Contrat",
+    "startDate": "2025-07-01",
+    "endDate": null,
+    "description_en": "Worked with a team to architect a consumer-facing PaaS, overseeing the deployment of 10+ Go/Java microservices.",
+    "description_fr": "Travaillé avec une équipe pour architecturer un PaaS orienté client, supervisant le déploiement de plus de 10 microservices Go/Java.",
+    "technologies": [
+      "Go",
+      "Java",
+      "Kubernetes",
+      "Operators",
+      "LGTM Stack",
+      "ArgoCD"
+    ],
+    "achievements_en": [
+      "Developed a **Custom Kubernetes Operator** in Go to manage multi-tenant lifecycle",
+      "Implemented custom CRDs automating reconciliation of VirtualServices, ResourceQuotas, and RBAC",
+      "Implemented SRE-driven observability using **LGTM stack** (Prometheus, Grafana, Loki, Tempo)",
+      "Maintained **99.9% availability** target during beta testing",
+      "Automated platform lifecycle via **GitOps (ArgoCD)** achieving 100% declarative infrastructure"
+    ],
+    "achievements_fr": [
+      "Développement d'un **opérateur Kubernetes personnalisé** en Go pour gérer le cycle de vie multi-tenant",
+      "Mise en œuvre de CRD personnalisés automatisant la réconciliation des VirtualServices, ResourceQuotas et RBAC",
+      "Mise en œuvre d'une observabilité pilotée par le SRE utilisant la **pile LGTM** (Prometheus, Grafana, Loki, Tempo)",
+      "Maintien de l'objectif de **disponibilité de 99,9 %** pendant les tests bêta",
+      "Automatisation du cycle de vie de la plateforme via **GitOps (ArgoCD)** atteignant 100 % d'infrastructure déclarative"
+    ],
+    "createdAt": "2025-07-01T09:00:00Z",
+    "updatedAt": "2026-02-10T09:00:00Z"
+  }
+]

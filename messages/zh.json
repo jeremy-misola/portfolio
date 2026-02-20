@@ -1,0 +1,273 @@
+{
+    "Header": {
+        "profile": "个人资料",
+        "platform": "平台",
+        "about": "关于我",
+        "experience": "项目经验",
+        "education": "教育背景",
+        "projects": "项目展示",
+        "hackathons": "黑客松",
+        "cluster": "实时集群",
+        "monitoring": "实时监控",
+        "gitops": "GitOps 工作流",
+        "provisioning": "基础设施配置",
+        "testimonials": "客户评价",
+        "more": "更多",
+        "admin": "管理后台"
+    },
+    "LanguageSwitcher": {
+        "label": "语言"
+    },
+    "Hero": {
+        "name": "Jeremy Misola",
+        "title": "充满活力的 DevOps 作品集",
+        "subtitle": "本网站是我云原生技能的实时演示，运行在我亲自构建、自动化并监控的 Kubernetes 集群上。",
+        "explore": "探索技术栈"
+    },
+    "About": {
+        "title": "构建具有弹性、可扩展的系统。",
+        "subtitle": "计算机科学系学生",
+        "description": "你好！我是一名即将毕业的计算机科学系学生，对 DevOps 原则有着浓厚的兴趣。我正在寻求一个具有挑战性的职位，以便能够利用我在 Kubernetes、基础设施自动化和 CI/CD 方面的技能，来构建和维护现代应用程序所需的高可用、高弹性的骨干架构。",
+        "connect": "在 LinkedIn 上联系我",
+        "follow": "在 GitHub 上关注我",
+        "resume": "下载简历",
+        "philosophies": {
+            "automation": {
+                "title": "自动化优先",
+                "description": "我致力于实现从 CI/CD 流水线到基础设施配置的一切自动化，从而减少手动操作，并确保可重复的一致性。"
+            },
+            "iac": {
+                "title": "基础设施即代码",
+                "description": "我将基础设施视为软件项目，通过代码来定义和管理其状态，从而实现版本控制、同行评审和全程透明。"
+            }
+        },
+        "skillsTitle": "技术技能"
+    },
+    "Projects": {
+        "title": "精选项目",
+        "subtitle": "展示我近期作品，包括云原生应用、基础设施自动化和 DevOps 解决方案。",
+        "no_projects": "目前暂无可用项目。",
+        "code": "代码",
+        "demo": "在线演示",
+        "created": "创建于",
+        "updated": "更新于",
+        "images": "图片",
+        "priority": "优先级",
+        "status": {
+            "completed": "已完成",
+            "in-progress": "进行中",
+            "planned": "计划中"
+        }
+    },
+    "Experience": {
+        "title": "工作经验",
+        "present": "至今"
+    },
+    "Education": {
+        "title": "教育经历"
+    },
+    "Hackathons": {
+        "title": "黑客松与成就",
+        "subtitle": "科技社区的竞赛与荣誉。",
+        "vanierCTF": {
+            "title": "Vanier College CTF",
+            "award": "第一名（并列）",
+            "category": "安全、逆向工程"
+        },
+        "champlainHackathon": {
+            "title": "Champlain College 黑客松",
+            "award": "第一名",
+            "category": "PyTorch、神经网络、计算机视觉"
+        }
+    },
+    "Testimonials": {
+        "title": "客户评价"
+    },
+    "Navigation": {
+        "title": "探索技术栈",
+        "about": {
+            "title": "关于我",
+            "description": "我的背景、技能和简历。"
+        },
+        "experience": {
+            "title": "工作经验",
+            "description": "我在 DevOps 和云原生技术领域的历程。"
+        },
+        "gitops": {
+            "title": "GitOps & CI/CD",
+            "description": "基于 ArgoCD 的自动化 GitOps 工作流。"
+        },
+        "cluster": {
+            "title": "实时 Kubernetes 集群",
+            "description": "本作品集运行所在的 K3s 集群的交互式地图。"
+        },
+        "monitoring": {
+            "title": "实时监控",
+            "description": "查看来自 Prometheus 和 Grafana 的实时性能指标。"
+        },
+        "projects": {
+            "title": "项目展示",
+            "description": "我近期完成的工作和作品集项目的展示。"
+        },
+        "provisioning": {
+            "title": "Ansible 自动化配置",
+            "description": "如何使用 Ansible 配置集群节点。"
+        }
+    },
+    "Ansible": {
+        "badge": "Terraform + Ansible",
+        "title": "使用 Ansible 自动化服务器管理",
+        "subtitle": "在使用 Terraform 配置虚拟机后，Ansible 负责后续的服务器管理任务，如用户管理和系统更新。",
+        "steps": {
+            "hardening": {
+                "title": "系统加固",
+                "description": "运行系统级更新，确保服务器打好补丁并保持安全。"
+            },
+            "management": {
+                "title": "用户管理",
+                "description": "轻松添加具有 SSH 访问权限的新管理员用户。"
+            }
+        },
+        "tabs": {
+            "addUser": {
+                "trigger": "添加用户",
+                "title": "按需创建用户",
+                "description": "此剧本会提示输入用户名和公钥 SSH 密钥，在所有服务器上创建一个启用 sudo 的新用户，简化访问管理。"
+            },
+            "updateServers": {
+                "trigger": "系统更新",
+                "title": "集中式系统更新",
+                "description": "运行这个简单的剧本，更新软件包缓存并升级清单中每台服务器上的所有软件包。"
+            }
+        },
+        "footer": {
+            "button": "探索 Ansible 剧本"
+        }
+    },
+    "GitOps": {
+        "title": "我的 DevOps 工作流",
+        "subtitle": "深入了解构建和部署此网站的架构和流程。",
+        "tabs": {
+            "repository": "代码仓库分析",
+            "pipeline": "流水线分析"
+        },
+        "repository": {
+            "commits": {
+                "title": "代码提交活跃度",
+                "description": "代码仓库中的每周提交频率。"
+            },
+            "pullRequests": {
+                "title": "合并请求分析",
+                "description": "所有 PR 的当前状态。"
+            },
+            "coverage": {
+                "title": "代码覆盖率趋势",
+                "description": "过去六个月的测试覆盖率百分比。"
+            }
+        },
+        "pipeline": {
+            "frequency": {
+                "title": "构建与部署频率",
+                "description": "每月构建次数和成功部署次数。"
+            },
+            "durations": {
+                "title": "近期构建耗时",
+                "description": "近期提交的平均构建时间（秒）。"
+            },
+            "health": {
+                "title": "部署健康度与质量",
+                "description": "最新部署流水线的多因子健康评分。"
+            }
+        }
+    },
+    "Monitoring": {
+        "title": "实时运行仪表板",
+        "subtitle": "此仪表板通过 Go 元 API 提供应用程序实时性能和基础设施健康状况的实时视图。",
+        "status": {
+            "activePod": {
+                "title": "活跃 Pod",
+                "tooltip": "来自 K8s Downward API 的 Pod 和节点信息。"
+            },
+            "health": {
+                "title": "应用健康状况",
+                "uptime": "99.9% 运行时间",
+                "status": "健康",
+                "description": "过去 24 小时",
+                "tooltip": "基于运行时间和错误率的整体健康状况。"
+            }
+        },
+        "tabs": {
+            "application": "应用程序",
+            "infrastructure": "基础设施",
+            "reliability": "可靠性",
+            "events": "事件"
+        },
+        "application": {
+            "http": {
+                "title": "HTTP 性能",
+                "description": "请求吞吐量和 P95 延迟。"
+            },
+            "traffic": {
+                "title": "API 端点流量",
+                "description": "按端点划分的 API 调用分布。"
+            }
+        },
+        "infrastructure": {
+            "resource": {
+                "title": "实时资源利用率",
+                "description": "正在运行的 Pod 的 CPU 和内存使用情况。"
+            },
+            "policies": {
+                "title": "网络策略",
+                "description": "实时 Kubernetes 网络策略状态。"
+            }
+        },
+        "reliability": {
+            "errorBudget": {
+                "title": "错误预算消耗",
+                "description": "快（1小时）与慢（6小时）消耗率。观察超过 2 倍的峰值。"
+            },
+            "uptime": {
+                "title": "模拟运行时间",
+                "description": "过去 7 天内各地区的运行时间（HTTP 检查）。"
+            },
+            "alerts": {
+                "title": "按严重程度划分的警报量",
+                "description": "本周触发的警报分布。"
+            }
+        },
+        "events": {
+            "title": "实时 Kubernetes 事件流",
+            "description": "来自 'production' 命名空间的实时事件馈送。"
+        }
+    },
+    "KubernetesCluster": {
+        "title": "实时集群资源管理器",
+        "subtitle": "这是为本页面提供服务的 Kubernetes 基础设施的实时只读视图。",
+        "overview": {
+            "title": "集群概览",
+            "k8sVersion": "K8s 版本",
+            "nodeStatus": "节点状态",
+            "ready": "就绪",
+            "unhealthy": "不健康",
+            "showNodes": "查看节点"
+        },
+        "activePod": {
+            "title": "活跃 Pod",
+            "description": "服务于您当前请求的确切 Pod。"
+        },
+        "activeDeployment": {
+            "title": "活跃部署",
+            "description": "驱动活动应用程序的 Git 提交。"
+        },
+        "nodeTypes": {
+            "deployment": "部署 (Deployment)",
+            "pod": "容器组 (Pod)",
+            "service": "服务 (Service)",
+            "ingress": "入口 (Ingress)"
+        },
+        "podStatus": {
+            "serving": "正在为您提供服务！"
+        }
+    }
+}

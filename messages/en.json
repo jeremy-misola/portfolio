@@ -1,0 +1,273 @@
+{
+    "Header": {
+        "profile": "Profile",
+        "platform": "Platform",
+        "about": "About Me",
+        "experience": "Experience",
+        "education": "Education",
+        "projects": "Projects",
+        "hackathons": "Hackathons",
+        "cluster": "Live Cluster",
+        "monitoring": "Monitoring",
+        "gitops": "GitOps Workflow",
+        "provisioning": "Provisioning",
+        "testimonials": "Testimonials",
+        "more": "More",
+        "admin": "Admin"
+    },
+    "LanguageSwitcher": {
+        "label": "Language"
+    },
+    "Hero": {
+        "name": "Jeremy Misola",
+        "title": "A Living DevOps Portfolio",
+        "subtitle": "This website is a live demonstration of my cloud-native skills, running on a Kubernetes cluster I built, automated, and monitor.",
+        "explore": "Explore the Stack"
+    },
+    "About": {
+        "title": "Building Resilient, Scalable Systems.",
+        "subtitle": "Computer Science Student",
+        "description": "Hello! I'm a final-year Computer Science student with a deep passion for DevOps principles. I am seeking a challenging role where I can leverage my skills in Kubernetes, infrastructure automation, and CI/CD to build and maintain the highly available, resilient backbone that modern applications require.",
+        "connect": "Connect on LinkedIn",
+        "follow": "Follow on GitHub",
+        "resume": "Download Resume",
+        "philosophies": {
+            "automation": {
+                "title": "Automation First",
+                "description": "I strive to automate everything from CI/CD pipelines to infrastructure provisioning, reducing manual effort and ensuring repeatable consistency."
+            },
+            "iac": {
+                "title": "Infrastructure as Code",
+                "description": "I treat infrastructure as a software project, defining and managing its state with code to enable versioning, peer review, and full transparency."
+            }
+        },
+        "skillsTitle": "Technical Skills"
+    },
+    "Projects": {
+        "title": "Featured Projects",
+        "subtitle": "A showcase of my recent work, including cloud-native applications, infrastructure automation, and DevOps solutions.",
+        "no_projects": "No projects available at the moment.",
+        "code": "Code",
+        "demo": "Live Demo",
+        "created": "Created",
+        "updated": "Updated",
+        "images": "images",
+        "priority": "Priority",
+        "status": {
+            "completed": "Completed",
+            "in-progress": "In Progress",
+            "planned": "Planned"
+        }
+    },
+    "Experience": {
+        "title": "Professional Experience",
+        "present": "Present"
+    },
+    "Education": {
+        "title": "Education"
+    },
+    "Hackathons": {
+        "title": "Hackathons & Achievements",
+        "subtitle": "Competitions and recognitions in the tech community.",
+        "vanierCTF": {
+            "title": "Vanier College CTF",
+            "award": "1st Place (Tie)",
+            "category": "Security, Reverse Engineering"
+        },
+        "champlainHackathon": {
+            "title": "Champlain College Hackathon",
+            "award": "1st Place",
+            "category": "PyTorch, Neural Networks, Computer Vision"
+        }
+    },
+    "Testimonials": {
+        "title": "Client Testimonials"
+    },
+    "Navigation": {
+        "title": "Explore the Stack",
+        "about": {
+            "title": "About Me",
+            "description": "My background, skills, and resume."
+        },
+        "experience": {
+            "title": "Professional Experience",
+            "description": "My journey in DevOps and cloud-native technologies."
+        },
+        "gitops": {
+            "title": "GitOps & CI/CD",
+            "description": "The automated GitOps workflow with ArgoCD."
+        },
+        "cluster": {
+            "title": "Live Kubernetes Cluster",
+            "description": "An interactive map of the K3s cluster this portfolio runs on."
+        },
+        "monitoring": {
+            "title": "Live Monitoring",
+            "description": "See real-time performance metrics from Prometheus & Grafana."
+        },
+        "projects": {
+            "title": "Projects",
+            "description": "A showcase of my recent work and portfolio projects."
+        },
+        "provisioning": {
+            "title": "Ansible Provisioning",
+            "description": "How the cluster nodes were configured with Ansible."
+        }
+    },
+    "Ansible": {
+        "badge": "Terraform + Ansible",
+        "title": "Automating Server Administration with Ansible",
+        "subtitle": "After provisioning VMs with Terraform, Ansible handles ongoing server administration tasks like user management and system updates.",
+        "steps": {
+            "hardening": {
+                "title": "System Hardening",
+                "description": "Run system-wide updates to keep servers patched and secure."
+            },
+            "management": {
+                "title": "User Management",
+                "description": "Easily add new administrative users with SSH access."
+            }
+        },
+        "tabs": {
+            "addUser": {
+                "trigger": "Add User",
+                "title": "On-Demand User Creation",
+                "description": "This playbook prompts for a username and a public SSH key to create a new sudo-enabled user on all servers, simplifying access management."
+            },
+            "updateServers": {
+                "trigger": "System Update",
+                "title": "Centralized System Updates",
+                "description": "Run this simple playbook to update the package cache and upgrade all packages on every server in your inventory."
+            }
+        },
+        "footer": {
+            "button": "Explore Ansible Playbooks"
+        }
+    },
+    "GitOps": {
+        "title": "My DevOps Workflow",
+        "subtitle": "An inside look into the architecture and processes that build and deploy this website.",
+        "tabs": {
+            "repository": "Repository Analytics",
+            "pipeline": "Pipeline Analytics"
+        },
+        "repository": {
+            "commits": {
+                "title": "Commit Activity Over Time",
+                "description": "Weekly commit frequency in the repository."
+            },
+            "pullRequests": {
+                "title": "Pull Request Analysis",
+                "description": "The current state of all PRs."
+            },
+            "coverage": {
+                "title": "Code Coverage Trend",
+                "description": "Test coverage percentage over the last six months."
+            }
+        },
+        "pipeline": {
+            "frequency": {
+                "title": "Build & Deployment Frequency",
+                "description": "Number of builds and successful deployments per month."
+            },
+            "durations": {
+                "title": "Recent Build Durations",
+                "description": "Average build time in seconds for recent commits."
+            },
+            "health": {
+                "title": "Deployment Health & Quality",
+                "description": "A multi-factor health score for the latest deployment pipeline."
+            }
+        }
+    },
+    "Monitoring": {
+        "title": "Live Operations Dashboard",
+        "subtitle": "This dashboard provides a real-time view into the application's live performance and infrastructure health, served by a Go meta-API.",
+        "status": {
+            "activePod": {
+                "title": "Active Pod",
+                "tooltip": "Pod & Node info from the K8s Downward API."
+            },
+            "health": {
+                "title": "Application Health",
+                "uptime": "99.9% Uptime",
+                "status": "Healthy",
+                "description": "Last 24 hours",
+                "tooltip": "Overall health based on uptime and error rate."
+            }
+        },
+        "tabs": {
+            "application": "Application",
+            "infrastructure": "Infrastructure",
+            "reliability": "Reliability",
+            "events": "Events"
+        },
+        "application": {
+            "http": {
+                "title": "HTTP Performance",
+                "description": "Request throughput and P95 latency."
+            },
+            "traffic": {
+                "title": "API Endpoint Traffic",
+                "description": "Distribution of API calls by endpoint."
+            }
+        },
+        "infrastructure": {
+            "resource": {
+                "title": "Live Resource Utilization",
+                "description": "CPU and Memory usage for the running pod."
+            },
+            "policies": {
+                "title": "Network Policies",
+                "description": "Live Kubernetes network policy status."
+            }
+        },
+        "reliability": {
+            "errorBudget": {
+                "title": "Error Budget Burn",
+                "description": "Fast (1h) vs Slow (6h) burn rates. Watch for spikes over 2x."
+            },
+            "uptime": {
+                "title": "Synthetic Uptime",
+                "description": "Last 7 days uptime by region (HTTP check)."
+            },
+            "alerts": {
+                "title": "Alert Volume by Severity",
+                "description": "Distribution of Alerts fired this week."
+            }
+        },
+        "events": {
+            "title": "Live Kubernetes Event Stream",
+            "description": "A real-time feed of events from the 'production' namespace."
+        }
+    },
+    "KubernetesCluster": {
+        "title": "Live Cluster Explorer",
+        "subtitle": "This is a live, read-only view of the Kubernetes infrastructure serving this very page.",
+        "overview": {
+            "title": "Cluster Overview",
+            "k8sVersion": "K8s Version",
+            "nodeStatus": "Node Status",
+            "ready": "Ready",
+            "unhealthy": "Unhealthy",
+            "showNodes": "Show Nodes"
+        },
+        "activePod": {
+            "title": "Active Pod",
+            "description": "The exact pod serving your current request."
+        },
+        "activeDeployment": {
+            "title": "Active Deployment",
+            "description": "The Git commit powering the active application."
+        },
+        "nodeTypes": {
+            "deployment": "Deployment",
+            "pod": "Pod",
+            "service": "Service",
+            "ingress": "Ingress"
+        },
+        "podStatus": {
+            "serving": "Serving Your Request!"
+        }
+    }
+}

@@ -1,0 +1,273 @@
+{
+    "Header": {
+        "profile": "Profil",
+        "platform": "Plateforme",
+        "about": "À propos",
+        "experience": "Expérience",
+        "education": "Éducation",
+        "projects": "Projets",
+        "hackathons": "Hackathons",
+        "cluster": "Cluster en direct",
+        "monitoring": "Surveillance",
+        "gitops": "Flux GitOps",
+        "provisioning": "Provisionnement",
+        "testimonials": "Témoignages",
+        "more": "Plus",
+        "admin": "Admin"
+    },
+    "LanguageSwitcher": {
+        "label": "Langue"
+    },
+    "Hero": {
+        "name": "Jeremy Misola",
+        "title": "Un Portfolio DevOps Vivant",
+        "subtitle": "Ce site est une démonstration en direct de mes compétences cloud-native, fonctionnant sur un cluster Kubernetes que j'ai construit, automatisé et que je surveille.",
+        "explore": "Explorer la Stack"
+    },
+    "About": {
+        "title": "Bâtir des Systèmes Résilients et Évolutifs.",
+        "subtitle": "Étudiant en Informatique",
+        "description": "Bonjour ! Je suis un étudiant de dernière année en informatique passionné par les principes DevOps. Je recherche un rôle stimulant où je pourrai mettre à profit mes compétences en Kubernetes, automatisation de l'infrastructure et CI/CD pour construire et maintenir l'ossature hautement disponible et résiliente dont les applications modernes ont besoin.",
+        "connect": "Se connecter sur LinkedIn",
+        "follow": "Suivre sur GitHub",
+        "resume": "Télécharger le CV",
+        "philosophies": {
+            "automation": {
+                "title": "L'automatisation d'abord",
+                "description": "Je m'efforce d'tout automatiser, des pipelines CI/CD à l'approvisionnement de l'infrastructure, réduisant l'effort manuel et garantissant une cohérence reproductible."
+            },
+            "iac": {
+                "title": "L'infrastructure en tant que code",
+                "description": "Je traite l'infrastructure comme un projet logiciel, définissant et gérant son état avec du code pour permettre le versionnage, la revue par les pairs et une transparence totale."
+            }
+        },
+        "skillsTitle": "Compétences Techniques"
+    },
+    "Projects": {
+        "title": "Projets Phares",
+        "subtitle": "Une vitrine de mes travaux récents, comprenant des applications cloud-native, l'automatisation de l'infrastructure et des solutions DevOps.",
+        "no_projects": "Aucun projet disponible pour le moment.",
+        "code": "Code",
+        "demo": "Démo en Direct",
+        "created": "Créé le",
+        "updated": "Mis à jour le",
+        "images": "images",
+        "priority": "Priorité",
+        "status": {
+            "completed": "Terminé",
+            "in-progress": "En cours",
+            "planned": "Planifié"
+        }
+    },
+    "Experience": {
+        "title": "Expérience Professionnelle",
+        "present": "Présent"
+    },
+    "Education": {
+        "title": "Éducation"
+    },
+    "Hackathons": {
+        "title": "Hackathons & Distinctions",
+        "subtitle": "Compétitions et distinctions dans la communauté tech.",
+        "vanierCTF": {
+            "title": "Vanier College CTF",
+            "award": "1ère place (Ex æquo)",
+            "category": "Sécurité, Ingénierie Inverse"
+        },
+        "champlainHackathon": {
+            "title": "Champlain College Hackathon",
+            "award": "1ère place",
+            "category": "PyTorch, Réseaux de Neurones, Vision par Ordinateur"
+        }
+    },
+    "Testimonials": {
+        "title": "Témoignages Clients"
+    },
+    "Navigation": {
+        "title": "Explorer la Stack",
+        "about": {
+            "title": "À Propos",
+            "description": "Mon parcours, mes compétences et mon CV."
+        },
+        "experience": {
+            "title": "Expérience Professionnelle",
+            "description": "Mon parcours dans les technologies DevOps et cloud-native."
+        },
+        "gitops": {
+            "title": "GitOps & CI/CD",
+            "description": "Le flux de travail GitOps automatisé avec ArgoCD."
+        },
+        "cluster": {
+            "title": "Cluster Kubernetes en Direct",
+            "description": "Une carte interactive du cluster K3s sur lequel tourne ce portfolio."
+        },
+        "monitoring": {
+            "title": "Surveillance en Direct",
+            "description": "Consultez les métriques de performance en temps réel de Prometheus & Grafana."
+        },
+        "projects": {
+            "title": "Projets",
+            "description": "Une vitrine de mes travaux récents et projets de portfolio."
+        },
+        "provisioning": {
+            "title": "Provisioning Ansible",
+            "description": "Comment les nœuds du cluster ont été configurés avec Ansible."
+        }
+    },
+    "Ansible": {
+        "badge": "Terraform + Ansible",
+        "title": "Automatisation de l'Administration Serveur avec Ansible",
+        "subtitle": "Après le provisionnement des VMs avec Terraform, Ansible gère les tâches d'administration continues comme la gestion des utilisateurs et les mises à jour système.",
+        "steps": {
+            "hardening": {
+                "title": "Sécurisation du Système",
+                "description": "Exécutez des mises à jour système pour maintenir les serveurs patchés et sécurisés."
+            },
+            "management": {
+                "title": "Gestion des Utilisateurs",
+                "description": "Ajoutez facilement de nouveaux utilisateurs administratifs avec accès SSH."
+            }
+        },
+        "tabs": {
+            "addUser": {
+                "trigger": "Ajouter un Utilisateur",
+                "title": "Création d'Utilisateur à la Demande",
+                "description": "Ce playbook demande un nom d'utilisateur et une clé SSH publique pour créer un nouvel utilisateur avec privilèges sudo sur tous les serveurs."
+            },
+            "updateServers": {
+                "trigger": "Mise à jour Système",
+                "title": "Mises à jour Système Centralisées",
+                "description": "Exécutez ce simple playbook pour mettre à jour le cache des paquets et mettre à niveau tous les paquets sur chaque serveur."
+            }
+        },
+        "footer": {
+            "button": "Explorer les Playbooks Ansible"
+        }
+    },
+    "GitOps": {
+        "title": "Mon Flux DevOps",
+        "subtitle": "Un regard intérieur sur l'architecture et les processus qui construisent et déploient ce site web.",
+        "tabs": {
+            "repository": "Analyses du Dépôt",
+            "pipeline": "Analyses du Pipeline"
+        },
+        "repository": {
+            "commits": {
+                "title": "Activité des Commits dans le Temps",
+                "description": "Fréquence hebdomadaire des commits dans le dépôt."
+            },
+            "pullRequests": {
+                "title": "Analyse des Pull Requests",
+                "description": "L'état actuel de toutes les PR."
+            },
+            "coverage": {
+                "title": "Tendance de la Couverture de Code",
+                "description": "Pourcentage de couverture des tests sur les six derniers mois."
+            }
+        },
+        "pipeline": {
+            "frequency": {
+                "title": "Fréquence de Build & Déploiement",
+                "description": "Nombre de builds et de déploiements réussis par mois."
+            },
+            "durations": {
+                "title": "Durées des Builds Récents",
+                "description": "Temps de build moyen en secondes pour les commits récents."
+            },
+            "health": {
+                "title": "Santé & Qualité du Déploiement",
+                "description": "Un score de santé multifactoriel pour le dernier pipeline de déploiement."
+            }
+        }
+    },
+    "Monitoring": {
+        "title": "Tableau de Bord des Opérations en Direct",
+        "subtitle": "Ce tableau de bord offre une vue en temps réel de la performance de l'application et de la santé de l'infrastructure.",
+        "status": {
+            "activePod": {
+                "title": "Pod Actif",
+                "tooltip": "Infos Pod & Nœud provenant de l'API Downward de K8s."
+            },
+            "health": {
+                "title": "Santé de l'Application",
+                "uptime": "99.9% de Disponibilité",
+                "status": "Sain",
+                "description": "Dernières 24 heures",
+                "tooltip": "Santé globale basée sur la disponibilité et le taux d'erreur."
+            }
+        },
+        "tabs": {
+            "application": "Application",
+            "infrastructure": "Infrastructure",
+            "reliability": "Fiabilité",
+            "events": "Événements"
+        },
+        "application": {
+            "http": {
+                "title": "Performance HTTP",
+                "description": "Débit des requêtes et latence P95."
+            },
+            "traffic": {
+                "title": "Trafic des Points de Terminaison API",
+                "description": "Distribution des appels API par point de terminaison."
+            }
+        },
+        "infrastructure": {
+            "resource": {
+                "title": "Utilisation des Ressources en Direct",
+                "description": "Utilisation CPU et Mémoire pour le pod en cours d'exécution."
+            },
+            "policies": {
+                "title": "Politiques Réseau",
+                "description": "État des politiques réseau Kubernetes en direct."
+            }
+        },
+        "reliability": {
+            "errorBudget": {
+                "title": "Consommation du Budget d'Erreur",
+                "description": "Taux de consommation Rapide (1h) vs Lent (6h). Surveillez les pics > 2x."
+            },
+            "uptime": {
+                "title": "Disponibilité Synthétique",
+                "description": "Disponibilité des 7 derniers jours par région (test HTTP)."
+            },
+            "alerts": {
+                "title": "Volume d'Alertes par Sévérité",
+                "description": "Distribution des alertes déclenchées cette semaine."
+            }
+        },
+        "events": {
+            "title": "Flux d'Événements Kubernetes en Direct",
+            "description": "Un flux en temps réel d'événements provenant de l'espace de noms 'production'."
+        }
+    },
+    "KubernetesCluster": {
+        "title": "Explorateur de Cluster en Direct",
+        "subtitle": "Ceci est une vue en lecture seule de l'infrastructure Kubernetes servant cette page.",
+        "overview": {
+            "title": "Aperçu du Cluster",
+            "k8sVersion": "Version K8s",
+            "nodeStatus": "État des Nœuds",
+            "ready": "Prêt",
+            "unhealthy": "Malsain",
+            "showNodes": "Afficher les Nœuds"
+        },
+        "activePod": {
+            "title": "Pod Actif",
+            "description": "Le pod exact servant votre requête actuelle."
+        },
+        "activeDeployment": {
+            "title": "Déploiement Actif",
+            "description": "Le commit Git alimentant l'application active."
+        },
+        "nodeTypes": {
+            "deployment": "Déploiement",
+            "pod": "Pod",
+            "service": "Service",
+            "ingress": "Ingress"
+        },
+        "podStatus": {
+            "serving": "Sert votre requête !"
+        }
+    }
+}

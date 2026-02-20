@@ -1,0 +1,35 @@
+[
+  {
+    "id": "1",
+    "name": "John Doe",
+    "company": "TechCorp",
+    "position": "Senior Developer",
+    "content": "Jeremy's DevOps skills are exceptional. He automated our deployment pipeline and reduced our deployment time by 80%.",
+    "rating": 5,
+    "status": "approved",
+    "createdAt": "2024-01-15T10:30:00Z",
+    "approvedAt": "2024-01-16T14:20:00Z"
+  },
+  {
+    "id": "2",
+    "name": "Jane Smith",
+    "company": "StartupXYZ",
+    "position": "CTO",
+    "content": "Working with Jeremy on our Kubernetes migration was a game-changer. His expertise in containerization is top-notch.",
+    "rating": 5,
+    "status": "approved",
+    "createdAt": "2024-02-20T09:15:00Z",
+    "approvedAt": "2024-02-21T11:45:00Z"
+  },
+  {
+    "id": "4",
+    "name": "Alice Brown",
+    "company": "FinTech Solutions",
+    "position": "Product Manager",
+    "content": "The CI/CD pipeline Jeremy built has streamlined our development process. We can now deploy multiple times a day with confidence.",
+    "rating": 5,
+    "status": "approved",
+    "createdAt": "2024-03-25T13:20:00Z",
+    "updatedAt": "2026-02-03T14:25:44.296Z"
+  }
+]

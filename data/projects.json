@@ -1,0 +1,71 @@
+[
+  {
+    "id": "1",
+    "title": "Cloud-Native Portfolio",
+    "description_en": "A live, cloud-native portfolio showcasing Kubernetes, GitOps, monitoring, and automation. Built with Next.js and deployed on a self-managed K3s cluster.",
+    "description_fr": "Un portfolio cloud-native en direct présentant Kubernetes, GitOps, la surveillance et l'automatisation. Construit avec Next.js et déployé sur un cluster K3s auto-géré.",
+    "technologies": [
+      "Next.js",
+      "Kubernetes",
+      "ArgoCD",
+      "Prometheus",
+      "Grafana",
+      "Docker"
+    ],
+    "githubUrl": "https://github.com/jeremy-misola/portfolio",
+    "demoUrl": "https://portfolio.jeremymisola.com",
+    "status": "completed",
+    "priority": 1,
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2026-02-10T14:20:00Z",
+    "images": [
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800",
+      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Automated Bare-Metal Cloud",
+    "description_en": "Built a High-Availability (HA) Hyper-converged cluster on bare-metal hardware, treating the entire stack from BIOS to Application as code via Terraform and GitOps. Implemented Longhorn distributed storage with automated replication and cross-node volume failover; conducted Chaos Engineering (node-kill) tests to ensure 99.9% workload uptime. Hardened platform security via a Zero-Trust approach: Integrated Doppler with External Secrets Operator to ensure zero plaintext secrets in Git, and centralized IAM via OIDC (Authentik).",
+    "description_fr": "Construit un cluster hyper-convergé à haute disponibilité (HA) sur du matériel bare-metal, traitant l'ensemble de la pile du BIOS à l'application comme du code via Terraform et GitOps. Mise en œuvre du stockage distribué Longhorn avec réplication automatisée et basculement de volume inter-nœuds; tests d'ingénierie du chaos (node-kill) pour assurer 99,9% de disponibilité des charges de travail. Sécurisation de la plateforme via une approche Zero-Trust: Intégration de Doppler avec External Secrets Operator pour assurer zéro secret en clair dans Git, et IAM centralisé via OIDC (Authentik).",
+    "technologies": [
+      "Terraform",
+      "Proxmox",
+      "K3s",
+      "Longhorn",
+      "External Secrets Operator",
+      "ArgoCD"
+    ],
+    "githubUrl": "https://github.com/jeremy-misola/GitOps-Homelab",
+    "demoUrl": null,
+    "status": "completed",
+    "priority": 2,
+    "createdAt": "2025-06-01T16:45:00Z",
+    "updatedAt": "2026-02-20T13:20:00Z",
+    "images": [
+      "https://images.unsplash.com/photo-1667372393119-c85c020759cc?w=800"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Distributed Observability & SRE Lab",
+    "description_en": "Deployed and configured the full LGTM stack to establish a centralized observability platform for monitoring containerized microservices. Designed comprehensive Grafana dashboards to visualize the Four Golden Signals (Latency, Traffic, Errors, Saturation), providing real-time visibility into cluster performance. Integrated Prometheus metrics and Loki logs to correlate telemetry, enabling a simulated 40% reduction in Mean Time to Recovery (MTTR) through automated alerting.",
+    "description_fr": "Déploiement et configuration de la pile LGTM complète pour établir une plateforme d'observabilité centralisée pour la surveillance des microservices conteneurisés. Conception de tableaux de bord Grafana complets pour visualiser les Quatre Signaux d'Or (Latence, Trafic, Erreurs, Saturation), fournissant une visibilité en temps réel des performances du cluster. Intégration des métriques Prometheus et des journaux Loki pour corréler la télémétrie, permettant une réduction simulée de 40% du temps moyen de récupération (MTTR) via l'alerte automatisée.",
+    "technologies": [
+      "LGTM Stack",
+      "OpenTelemetry",
+      "S3 Storage",
+      "Blackbox Exporter",
+      "Grafana"
+    ],
+    "githubUrl": "https://github.com/jeremy-misola/GitOps-Homelab#observability--reliability",
+    "demoUrl": null,
+    "status": "completed",
+    "priority": 3,
+    "createdAt": "2025-11-01T09:15:00Z",
+    "updatedAt": "2026-02-20T11:45:00Z",
+    "images": [
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800"
+    ]
+  }
+]
