@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { isValidSession } from '@/lib/admin';
+import { initializeDatabase } from '@/lib/database';
 
 export function applyJsonCors(response) {
   response.headers.set('Access-Control-Allow-Origin', '*');
@@ -26,6 +27,15 @@ export function preflight() {
 
 export function head() {
   return applyJsonCors(new NextResponse(null));
+}
+
+export async function getPublicData(loadDatabaseData, loadFallbackData) {
+  const initialized = await initializeDatabase();
+  if (initialized) {
+    return loadDatabaseData();
+  }
+
+  return loadFallbackData();
 }
 
 export function isAdminRequest(request) {

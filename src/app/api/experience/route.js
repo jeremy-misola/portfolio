@@ -1,5 +1,6 @@
-import { db, initializeDatabase } from '@/lib/database';
-import { fail, head, ok, preflight } from '@/lib/api';
+import { db } from '@/lib/database';
+import { getPublicData, head, ok, preflight } from '@/lib/api';
+import { getExperienceFallback } from '@/lib/publicData';
 
 export async function OPTIONS() {
   return preflight();
@@ -10,7 +11,5 @@ export async function HEAD() {
 }
 
 export async function GET() {
-  const initialized = await initializeDatabase();
-  if (!initialized) return fail('Database unavailable', 503);
-  return ok(await db.getExperience());
+  return ok(await getPublicData(() => db.getExperience(), getExperienceFallback));
 }

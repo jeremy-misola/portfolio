@@ -1,5 +1,6 @@
 import { db, initializeDatabase } from '@/lib/database';
-import { cleanString, cleanText, fail, head, ok, preflight } from '@/lib/api';
+import { cleanString, cleanText, fail, getPublicData, head, ok, preflight } from '@/lib/api';
+import { getTestimonialsFallback } from '@/lib/publicData';
 
 export async function OPTIONS() {
   return preflight();
@@ -10,9 +11,7 @@ export async function HEAD() {
 }
 
 export async function GET() {
-  const initialized = await initializeDatabase();
-  if (!initialized) return fail('Database unavailable', 503);
-  return ok(await db.getTestimonials('approved'));
+  return ok(await getPublicData(() => db.getTestimonials('approved'), getTestimonialsFallback));
 }
 
 export async function POST(request) {
