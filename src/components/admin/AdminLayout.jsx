@@ -38,25 +38,25 @@ const AdminLayout = ({ children }) => {
   const { isAuthenticated, isLoading } = useAdminAuth();
 
   const pathname = usePathname();
-  const isLoginPage = pathname.includes('/admin/login');
+  const isLoginPage = pathname.includes('/dashboard/login');
 
   // Redirect to login if not authenticated and not already on login page
   useEffect(() => {
-    if (!isLoading && !isAuthenticated && !pathname.includes('/admin/login')) {
-      router.push('/admin/login');
+    if (!isLoading && !isAuthenticated && !pathname.includes('/dashboard/login')) {
+      router.push('/dashboard/login');
     }
   }, [isAuthenticated, isLoading, router, pathname]);
 
   const navigation = [
-    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { name: 'Projects', href: '/admin/projects', icon: FolderKanban },
-    { name: 'Experience', href: '/admin/experience', icon: Briefcase },
-    { name: 'Skills', href: '/admin/skills', icon: Wrench },
-    { name: 'Education', href: '/admin/education', icon: GraduationCap },
-    { name: 'Hobbies', href: '/admin/hobbies', icon: Heart },
-    { name: 'Testimonials', href: '/admin/testimonials', icon: Users },
-    { name: 'Messages', href: '/admin/messages', icon: Mail },
-    { name: 'Settings', href: '/admin/settings', icon: Settings },
+    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { name: 'Projects', href: '/dashboard/projects', icon: FolderKanban },
+    { name: 'Experience', href: '/dashboard/experience', icon: Briefcase },
+    { name: 'Skills', href: '/dashboard/skills', icon: Wrench },
+    { name: 'Education', href: '/dashboard/education', icon: GraduationCap },
+    { name: 'Hobbies', href: '/dashboard/hobbies', icon: Heart },
+    { name: 'Testimonials', href: '/dashboard/testimonials', icon: Users },
+    { name: 'Messages', href: '/dashboard/messages', icon: Mail },
+    { name: 'Settings', href: '/dashboard/settings', icon: Settings },
   ];
 
   useEffect(() => {
@@ -84,9 +84,9 @@ const AdminLayout = ({ children }) => {
       if (response.ok) {
         toast({
           title: "Logged out successfully",
-          description: "You have been logged out of the admin panel.",
+          description: "You have been logged out of the dashboard.",
         });
-        router.push('/admin/login');
+        router.push('/dashboard/login');
       } else {
         toast({
           title: "Logout failed",
@@ -122,7 +122,7 @@ const AdminLayout = ({ children }) => {
               {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
             <Shield className="h-6 w-6 text-primary" />
-            <span className="font-black text-base tracking-tight">Admin Panel</span>
+            <span className="font-black text-base tracking-tight">Dashboard</span>
           </div>
           <div className="flex items-center space-x-2">
             <Button
@@ -159,7 +159,7 @@ const AdminLayout = ({ children }) => {
                   <div className="flex items-center space-x-3">
                     <Shield className="h-8 w-8 text-primary" />
                     <div>
-                      <h1 className="font-black text-xl tracking-tight">Admin Panel</h1>
+                      <h1 className="font-black text-xl tracking-tight">Dashboard</h1>
                       <p className="text-xs text-muted-foreground">Content Management</p>
                     </div>
                   </div>

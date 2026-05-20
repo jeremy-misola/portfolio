@@ -1,0 +1,125 @@
+name: Build and Push to DockerHub
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+      - '.dockerignore'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Override image/chart tag (defaults to git sha)'
+        required: false
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOCKER_IMAGE: jurassicjey/portfolio
+  HELM_CHART_PATH: ./portfolio-helm
+  HELM_CHART_NAME: portfolio-helm
+
+jobs:
+  build-and-push:
+    name: Build & Push
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # --- Determine tags ---------------------------------------------------
+
+      - name: Generate image tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_IMAGE }}
+          flavor: |
+            latest=true
+          tags: |
+            type=sha,format=short
+            type=raw,value=${{ github.event.inputs.tag }},enable=${{ github.event.inputs.tag != '' }}
+
+      # --- Build & push Docker image ----------------------------------------
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
+
+      # --- Package & push Helm chart as OCI artifact -----------------------
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: latest
+
+      - name: Determine chart version and app version
+        id: chart
+        run: |
+          SHORT_SHA="${{ github.sha }}"
+          SHORT_SHA="${SHORT_SHA:0:7}"
+          TS="$(date +%s)"
+
+          # Derive chart version from git sha and timestamp (0.1.x+  pattern)
+          CHART_VERSION="0.1.$TS-$SHORT_SHA"
+          echo "chart_version=$CHART_VERSION" >> "$GITHUB_OUTPUT"
+
+          # App version uses the image tag (short sha or manual override)
+          if [[ -n "${{ github.event.inputs.tag }}" ]]; then
+            APP_VERSION="${{ github.event.inputs.tag }}"
+          else
+            APP_VERSION="$SHORT_SHA"
+          fi
+          echo "app_version=$APP_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Update Chart.yaml with version
+        run: |
+          yq eval -i '
+            .version = "${{ steps.chart.outputs.chart_version }}" |
+            .appVersion = "${{ steps.chart.outputs.app_version }}"
+          ' "${{ env.HELM_CHART_PATH }}/Chart.yaml"
+
+      - name: Update values.yaml with image tag
+        run: |
+          yq eval -i '
+            .image.tag = "${{ steps.chart.outputs.app_version }}"
+          ' "${{ env.HELM_CHART_PATH }}/values.yaml"
+
+      - name: Package Helm chart
+        run: |
+          helm package "${{ env.HELM_CHART_PATH }}" \
+            --destination ./.chart-package
+
+      - name: Push Helm chart to DockerHub (OCI)
+        run: |
+          helm push ./.chart-package/${{ env.HELM_CHART_NAME }}-*.tgz \
+            oci://registry-1.docker.io/${{ env.DOCKER_IMAGE }}

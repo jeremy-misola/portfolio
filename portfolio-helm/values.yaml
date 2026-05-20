@@ -1,0 +1,229 @@
+# Default values for portfolio-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Number of replicas
+replicaCount: 3
+
+# -- Container image configuration
+image:
+  repository: jurassicjey/portfolio
+  pullPolicy: Always
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+# -- Secrets for pulling images from a private registry
+imagePullSecrets: []
+
+# -- Override the chart name
+nameOverride: ""
+
+# -- Override the full app name
+fullnameOverride: ""
+
+# -- Service account configuration
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template.
+  name: ""
+
+# -- Pod annotations
+podAnnotations: {}
+
+# -- Pod labels (additional labels beyond the defaults)
+podLabels: {}
+
+# -- Pod security context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Container security context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# -- Service configuration
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+# -- Ingress configuration (not used; we use HTTPRoute)
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+# -- Gateway API HTTPRoute configuration
+httpRoute:
+  # -- Enable HTTPRoute
+  enabled: true
+  # -- HTTPRoute annotations
+  annotations: {}
+  # -- Which Gateways this Route is attached to
+  parentRefs:
+    - name: prod-web
+      namespace: envoy-gateway-system
+  # -- Hostnames matching HTTP header
+  hostnames:
+    - "portfolio.jeremymr.dev"
+  # -- List of rules and filters
+  rules:
+    - backendRefs:
+        - name: frontend-service
+          port: 80
+
+# -- Database configuration (CNPG)
+database:
+  # -- Database host (CNPG cluster service)
+  host: portfolio-db-rw
+  # -- Database port
+  port: "5432"
+  # -- Database name
+  name: portfolio
+  # -- Existing secret containing database credentials
+  existingSecret:
+    name: portfolio-db-app
+    usernameKey: username
+    passwordKey: password
+
+# -- Admin secrets configuration (from Doppler via ExternalSecret)
+adminSecrets:
+  existingSecret:
+    name: portfolio-admin-secrets
+    usernameKey: ADMIN_USERNAME
+    passwordKey: ADMIN_PASSWORD
+    sessionSecretKey: ADMIN_SESSION_SECRET
+
+# -- Resource requests and limits
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+# -- Liveness probe configuration
+livenessProbe:
+  httpGet:
+    path: /
+    port: 3000
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Readiness probe configuration
+readinessProbe:
+  httpGet:
+    path: /
+    port: 3000
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+# -- HorizontalPodAutoscaler configuration
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+# -- Additional volumes
+volumes: []
+
+# -- Additional volume mounts
+volumeMounts: []
+
+# -- Node selector
+nodeSelector: {}
+
+# -- Tolerations
+tolerations: []
+
+# -- Affinity
+affinity: {}
+
+# -- CloudNativePG Cluster configuration
+cnpg:
+  # -- Enable CNPG Cluster resource
+  enabled: true
+  # -- Number of PostgreSQL instances
+  instances: 3
+  # -- PostgreSQL configuration parameters
+  postgresql:
+    parameters:
+      max_connections: "200"
+      shared_buffers: "256MB"
+      effective_cache_size: "1GB"
+      maintenance_work_mem: "64MB"
+      checkpoint_completion_target: "0.9"
+      wal_buffers: "16MB"
+      default_statistics_target: "100"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "200"
+      work_mem: "2621kB"
+      min_wal_size: "1GB"
+      max_wal_size: "4GB"
+  # -- Storage configuration
+  storage:
+    size: 10Gi
+    storageClass: standard
+  # -- Resource requests and limits for CNPG pods
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+  # -- Primary update strategy
+  primaryUpdateStrategy: unsupervised
+  # -- Monitoring configuration
+  monitoring:
+    enablePodMonitor: true
+  # -- Bootstrap configuration
+  bootstrap:
+    initdb:
+      database: portfolio
+      owner: portfolio
+
+# -- ExternalSecret configuration (Doppler-backed admin secrets)
+externalSecrets:
+  # -- Enable ExternalSecret resource
+  enabled: true
+  # -- Secret store reference
+  secretStoreRef:
+    name: doppler-secret-store
+    kind: ClusterSecretStore
+  # -- Target secret name
+  targetSecretName: portfolio-admin-secrets
+  # -- Data key mappings from Doppler
+  data:
+    - secretKey: ADMIN_USERNAME
+      remoteRef:
+        key: ADMIN_USERNAME
+    - secretKey: ADMIN_PASSWORD
+      remoteRef:
+        key: ADMIN_PASSWORD
+    - secretKey: ADMIN_SESSION_SECRET
+      remoteRef:
+        key: ADMIN_SESSION_SECRET

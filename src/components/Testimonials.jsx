@@ -55,14 +55,14 @@ export default function Testimonials() {
         </div>
 
         <div className="bento-grid">
-          <div className="md:col-span-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
             {testimonials.map((t, index) => (
               <article
                 key={t.id}
-                className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-4 sm:p-5"
+                className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-4 sm:p-5 h-full"
                 style={{ animationDelay: `${Math.min(index * 80, 300)}ms` }}
               >
-                <h3 className="text-lg font-black tracking-tight">{t.name}</h3>
+                <h3 className="text-lg font-bold tracking-tight">{t.name}</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   {t.position} {t.company ? `- ${t.company}` : ''}
                 </p>
@@ -72,8 +72,8 @@ export default function Testimonials() {
             ))}
           </div>
 
-          <div className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-5 sm:p-6 md:col-span-2" style={{ animationDelay: '180ms' }}>
-            <h3 className="text-xl font-black tracking-tight mb-4">
+          <div className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-5 sm:p-6 md:col-span-3 h-full" style={{ animationDelay: '180ms' }}>
+            <h3 className="text-xl font-bold tracking-tight mb-4">
               {locale === 'fr' ? 'Soumettre un temoignage' : 'Submit a testimonial'}
             </h3>
             <form onSubmit={submit} className="space-y-3">

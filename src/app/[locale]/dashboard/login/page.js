@@ -39,9 +39,9 @@ export default function AdminLogin() {
         if (response.ok) {
           toast({
             title: "Login successful",
-            description: "Welcome to the admin panel!",
+            description: "Welcome to the dashboard!",
           });
-          router.push('/admin');
+          router.push('/dashboard');
         } else {
         toast({
           title: "Login failed",
@@ -82,9 +82,9 @@ export default function AdminLogin() {
                 <Shield className="h-8 w-8 text-primary" />
               </div>
             </div>
-            <CardTitle className="text-2xl font-bold text-center">Admin Panel</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">Dashboard</CardTitle>
             <CardDescription className="text-center text-muted-foreground">
-              Enter your credentials to access the admin dashboard
+              Enter your credentials to access the dashboard
             </CardDescription>
           </CardHeader>
           <CardContent>

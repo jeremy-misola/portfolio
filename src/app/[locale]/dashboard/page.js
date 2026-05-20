@@ -118,8 +118,8 @@ export default function AdminDashboard() {
       icon: Users,
       color: "from-blue-500 to-cyan-500",
       actions: [
-        { label: "View All", href: `/${locale}/admin/testimonials`, icon: Eye },
-        { label: "Add New", href: `/${locale}/admin/testimonials/new`, icon: Plus }
+        { label: "View All", href: `/${locale}/dashboard/testimonials`, icon: Eye },
+        { label: "Add New", href: `/${locale}/dashboard/testimonials/new`, icon: Plus }
       ],
       badges: [
         { label: "Approved", count: stats.testimonials.approved, variant: "default" },
@@ -133,8 +133,8 @@ export default function AdminDashboard() {
       icon: FolderKanban,
       color: "from-green-500 to-emerald-500",
       actions: [
-        { label: "View All", href: `/${locale}/admin/projects`, icon: Eye },
-        { label: "Add New", href: `/${locale}/admin/projects/new`, icon: Plus }
+        { label: "View All", href: `/${locale}/dashboard/projects`, icon: Eye },
+        { label: "Add New", href: `/${locale}/dashboard/projects/new`, icon: Plus }
       ],
       badges: [
         { label: "Completed", count: stats.projects.completed, variant: "default" },
@@ -148,8 +148,8 @@ export default function AdminDashboard() {
       icon: Briefcase,
       color: "from-purple-500 to-pink-500",
       actions: [
-        { label: "View All", href: `/${locale}/admin/experience`, icon: Eye },
-        { label: "Add New", href: `/${locale}/admin/experience/new`, icon: Plus }
+        { label: "View All", href: `/${locale}/dashboard/experience`, icon: Eye },
+        { label: "Add New", href: `/${locale}/dashboard/experience/new`, icon: Plus }
       ],
       badges: []
     }
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
         <div>
           <p className="section-kicker">Control Center</p>
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight mt-2">
-            <span className="kinetic-heading">Admin Dashboard</span>
+            <span className="kinetic-heading">Dashboard</span>
           </h1>
           <p className="text-muted-foreground">Overview of your portfolio content and recent activity</p>
         </div>
@@ -291,15 +291,15 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="grid gap-2">
-              <Button variant="outline" className="justify-start tap-scale" onClick={() => window.location.href = `/${locale}/admin/testimonials`}>
+              <Button variant="outline" className="justify-start tap-scale" onClick={() => window.location.href = `/${locale}/dashboard/testimonials`}>
                 <Users className="h-4 w-4 mr-2" />
                 Review Pending Testimonials ({stats.testimonials.pending})
               </Button>
-              <Button variant="outline" className="justify-start tap-scale" onClick={() => window.location.href = `/${locale}/admin/projects`}>
+              <Button variant="outline" className="justify-start tap-scale" onClick={() => window.location.href = `/${locale}/dashboard/projects`}>
                 <FolderKanban className="h-4 w-4 mr-2" />
                 Manage Projects
               </Button>
-              <Button variant="outline" className="justify-start tap-scale" onClick={() => window.location.href = `/${locale}/admin/experience`}>
+              <Button variant="outline" className="justify-start tap-scale" onClick={() => window.location.href = `/${locale}/dashboard/experience`}>
                 <Briefcase className="h-4 w-4 mr-2" />
                 Update Experience
               </Button>

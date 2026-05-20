@@ -99,11 +99,10 @@ function Experience() {
         ) : (
           <div className="bento-grid">
             {experience.map((exp, index) => {
-              const spanClass = index % 3 === 0 ? "md:col-span-4" : "md:col-span-2";
               return (
                 <article
                   key={exp.id}
-                  className={`glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-4 sm:p-6 ${spanClass}`}
+                  className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-4 sm:p-6 md:col-span-3 h-full"
                   style={{ animationDelay: `${Math.min(index * 80, 360)}ms` }}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -111,7 +110,7 @@ function Experience() {
                       <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 text-primary">
                         <Briefcase className="h-5 w-5" />
                       </div>
-                      <h3 className="mt-4 text-xl sm:text-2xl font-black tracking-tight">
+                      <h3 className="mt-4 text-xl sm:text-2xl font-bold tracking-tight">
                         {locale === 'fr' ? exp.position_fr : exp.position_en || exp.position}
                       </h3>
                       <p className="text-muted-foreground mt-1">{exp.company}</p>

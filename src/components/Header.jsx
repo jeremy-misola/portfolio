@@ -12,7 +12,7 @@ export default function Header() {
   const pathname = usePathname();
   const basePath = `/${locale}`;
 
-  if (pathname.includes('/admin')) {
+  if (pathname.includes('/dashboard')) {
     return null;
   }
 

@@ -38,10 +38,10 @@ export default function Education() {
           {education.map((item, index) => (
             <article
               key={item.id}
-              className={`glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-4 sm:p-6 ${index % 3 === 0 ? 'md:col-span-4' : 'md:col-span-2'}`}
+              className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-4 sm:p-6 md:col-span-3 h-full"
               style={{ animationDelay: `${Math.min(index * 80, 340)}ms` }}
             >
-              <h3 className="text-xl font-black tracking-tight">{item.school}</h3>
+              <h3 className="text-xl font-bold tracking-tight">{item.school}</h3>
               <p className="text-sm text-muted-foreground mt-1">{item.location}</p>
 
               <p className="mt-4 font-semibold text-base">

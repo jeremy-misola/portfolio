@@ -29,10 +29,10 @@ export default function Hobbies() {
           {hobbies.map((hobby, index) => (
             <article
               key={hobby.id}
-              className={`glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-5 sm:p-6 ${index % 4 === 0 ? 'md:col-span-3' : 'md:col-span-2'}`}
+              className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-5 sm:p-6 md:col-span-3 h-full"
               style={{ animationDelay: `${Math.min(index * 90, 360)}ms` }}
             >
-              <h3 className="text-lg sm:text-xl font-black tracking-tight">
+              <h3 className="text-lg sm:text-xl font-bold tracking-tight">
                 {locale === 'fr' ? hobby.name_fr : hobby.name_en}
               </h3>
               <p className="mt-3 text-sm sm:text-base text-muted-foreground leading-relaxed">

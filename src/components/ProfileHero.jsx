@@ -31,14 +31,14 @@ export default function ProfileHero() {
     <section id="hero" className="section-shell pt-10 sm:pt-14">
       <div className="container mx-auto px-4">
         <div className="bento-grid">
-          <article className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-5 sm:p-8 md:col-span-4" style={{ animationDelay: '60ms' }}>
+          <article className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-5 sm:p-8 md:col-span-3 h-full" style={{ animationDelay: '60ms' }}>
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
                 <p className="section-kicker">{settings?.fullName || 'Portfolio'}</p>
-                <h1 className="mt-4 text-4xl sm:text-6xl lg:text-7xl font-black leading-[0.95] tracking-tight">
+                <h1 className="mt-4 text-4xl sm:text-6xl lg:text-7xl font-bold leading-[0.98] tracking-tight">
                   <span className="kinetic-heading">{headline || 'Professional Portfolio'}</span>
                 </h1>
-                <p className="section-subtitle max-w-2xl">{bio || 'Manage your profile content from the admin panel.'}</p>
+                <p className="section-subtitle max-w-2xl">{bio || 'Manage your profile content from the dashboard.'}</p>
               </div>
               <div className="hidden sm:block">
                 <img
@@ -63,9 +63,9 @@ export default function ProfileHero() {
             </div>
           </article>
 
-          <aside className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-5 sm:p-8 md:col-span-2" style={{ animationDelay: '140ms' }}>
+          <aside className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-5 sm:p-8 md:col-span-3 h-full" style={{ animationDelay: '140ms' }}>
             <p className="section-kicker">{locale === 'fr' ? 'Connecter' : 'Connect'}</p>
-            <h2 className="mt-3 text-2xl font-black tracking-tight">
+            <h2 className="mt-3 text-2xl font-bold tracking-tight">
               {locale === 'fr' ? 'Liens rapides' : 'Quick Links'}
             </h2>
             <div className="mt-5 space-y-2.5 sm:space-y-3">

@@ -48,7 +48,7 @@ export default function ContactSection() {
     <section id="contact" className="section-shell">
       <div className="container mx-auto px-4">
         <div className="bento-grid">
-          <div className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-5 sm:p-8 md:col-span-2" style={{ animationDelay: '60ms' }}>
+          <div className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-5 sm:p-8 md:col-span-3 h-full" style={{ animationDelay: '60ms' }}>
             <p className="section-kicker">{locale === 'fr' ? 'Discutons' : 'Lets Talk'}</p>
             <h2 className="section-title mt-2">{locale === 'fr' ? 'Contact' : 'Contact'}</h2>
             <div className="mt-5 sm:mt-6 space-y-1.5 sm:space-y-2 text-muted-foreground text-sm sm:text-base">
@@ -58,7 +58,7 @@ export default function ContactSection() {
             </div>
           </div>
 
-          <form onSubmit={submit} className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-5 sm:p-8 md:col-span-4 space-y-3" style={{ animationDelay: '140ms' }}>
+          <form onSubmit={submit} className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-5 sm:p-8 md:col-span-3 h-full space-y-3" style={{ animationDelay: '140ms' }}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
               <Input
                 required

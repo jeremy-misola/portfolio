@@ -90,11 +90,10 @@ function Projects() {
         ) : (
           <div className="bento-grid">
             {projects.map((project, index) => {
-              const spanClass = index % 5 === 0 ? "md:col-span-4" : index % 2 === 0 ? "md:col-span-3" : "md:col-span-2";
               return (
                 <article
                   key={project.id}
-                  className={`glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-4 sm:p-6 ${spanClass}`}
+                  className="glass-panel chrome-stroke interactive-panel micro-reveal rounded-3xl p-4 sm:p-6 md:col-span-3 h-full"
                   style={{ animationDelay: `${Math.min(index * 70, 360)}ms` }}
                 >
                   {project.images && project.images.length > 0 && (
@@ -119,7 +118,7 @@ function Projects() {
                     </Badge>
                   </div>
 
-                  <h3 className="text-xl sm:text-2xl font-black tracking-tight">{project.title}</h3>
+                  <h3 className="text-xl sm:text-2xl font-bold tracking-tight">{project.title}</h3>
                   <p className="mt-3 text-sm sm:text-base text-muted-foreground leading-relaxed">
                     {locale === 'fr' ? project.description_fr : project.description_en || project.description}
                   </p>
