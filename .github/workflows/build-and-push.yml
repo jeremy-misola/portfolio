@@ -121,7 +121,7 @@ jobs:
 
       - name: Authenticate Helm with DockerHub (OCI)
         run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | helm registry login oci://registry-1.docker.io \
+          echo "${{ secrets.DOCKER_PASSWORD }}" | helm registry login registry-1.docker.io \
             --username "${{ secrets.DOCKER_USERNAME }}" \
             --password-stdin
 

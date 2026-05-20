@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { validateAdminCredentials, generateSessionToken, addActiveSession, removeActiveSession } from '@/lib/admin';
 import { applyCorsHeaders, createPreflightResponse } from '@/lib/cors';
+import { initializeDatabase } from '@/lib/database';
 
 // Handle CORS preflight
 export async function OPTIONS() {
@@ -38,6 +39,14 @@ export async function POST(request) {
       return applyCorsHeaders(NextResponse.json(
         { error: 'Admin session secret is missing or invalid' },
         { status: 500 }
+      ));
+    }
+
+    const initialized = await initializeDatabase();
+    if (!initialized) {
+      return applyCorsHeaders(NextResponse.json(
+        { error: 'Admin backend is still starting up. Please try again in a moment.' },
+        { status: 503 }
       ));
     }
     

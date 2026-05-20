@@ -1,12 +1,14 @@
 import { Pool } from 'pg';
 
 const CONNECTION_CHECK_TTL_MS = parseInt(process.env.DB_CONNECTION_CHECK_TTL_MS || '10000', 10);
+const CONNECTION_FAILURE_CHECK_TTL_MS = parseInt(process.env.DB_CONNECTION_FAILURE_CHECK_TTL_MS || '1000', 10);
 const FAILURE_LOG_COOLDOWN_MS = parseInt(process.env.DB_FAILURE_LOG_COOLDOWN_MS || '60000', 10);
 
 let cachedConnectionStatus = null;
 let lastConnectionCheckAt = 0;
 let lastFailureLogAt = 0;
 let schemaInitialized = false;
+let initializationPromise = null;
 
 const pool = new Pool({
   user: process.env.DATABASE_USER,
@@ -168,7 +170,11 @@ function mapSettingsRow(row) {
 
 async function testConnection() {
   const now = Date.now();
-  if (cachedConnectionStatus !== null && now - lastConnectionCheckAt < CONNECTION_CHECK_TTL_MS) {
+  const cacheTtlMs = cachedConnectionStatus === false
+    ? CONNECTION_FAILURE_CHECK_TTL_MS
+    : CONNECTION_CHECK_TTL_MS;
+
+  if (cachedConnectionStatus !== null && now - lastConnectionCheckAt < cacheTtlMs) {
     return cachedConnectionStatus;
   }
 
@@ -202,14 +208,19 @@ async function testConnection() {
 }
 
 async function initializeDatabase() {
+  if (schemaInitialized) {
+    return true;
+  }
+
+  if (initializationPromise) {
+    return initializationPromise;
+  }
+
+  initializationPromise = (async () => {
   try {
     const connected = await testConnection();
     if (!connected) {
       return false;
-    }
-
-    if (schemaInitialized) {
-      return true;
     }
 
     await createTables();
@@ -219,7 +230,12 @@ async function initializeDatabase() {
     console.error('Error initializing database:', error);
     schemaInitialized = false;
     return false;
+  } finally {
+    initializationPromise = null;
   }
+  })();
+
+  return initializationPromise;
 }
 
 async function createTables() {

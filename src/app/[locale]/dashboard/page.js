@@ -25,6 +25,7 @@ import { useToast } from "@/components/ui/use-toast";
 export default function AdminDashboard() {
   const locale = useLocale();
   const { toast } = useToast();
+  const [backendUnavailable, setBackendUnavailable] = useState(false);
   const [stats, setStats] = useState({
     testimonials: { total: 0, approved: 0, pending: 0 },
     projects: { total: 0, completed: 0, inProgress: 0 },
@@ -39,17 +40,53 @@ export default function AdminDashboard() {
 
   const ensureArray = (value) => (Array.isArray(value) ? value : []);
 
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const fetchAdminJson = async (url, retries = 2) => {
+    for (let attempt = 0; attempt <= retries; attempt += 1) {
+      const response = await fetch(url);
+
+      if (response.ok) {
+        setBackendUnavailable(false);
+        return response.json();
+      }
+
+      if (response.status === 503 && attempt < retries) {
+        await sleep(500 * (attempt + 1));
+        continue;
+      }
+
+      let message = `${url} failed with status ${response.status}`;
+
+      try {
+        const data = await response.json();
+        if (typeof data?.error === 'string' && data.error) {
+          message = data.error;
+        }
+      } catch {
+        // Keep the default message when the response body isn't JSON.
+      }
+
+      if (response.status === 503) {
+        setBackendUnavailable(true);
+      }
+
+      throw new Error(message);
+    }
+
+    return [];
+  };
+
   const fetchStats = async () => {
     try {
       const [testimonialsRes, projectsRes, experienceRes] = await Promise.all([
-        fetch('/api/admin/testimonials'),
-        fetch('/api/admin/projects'),
-        fetch('/api/admin/experience')
+        fetchAdminJson('/api/admin/testimonials'),
+        fetchAdminJson('/api/admin/projects'),
+        fetchAdminJson('/api/admin/experience')
       ]);
-
-      const testimonials = ensureArray(await testimonialsRes.json());
-      const projects = ensureArray(await projectsRes.json());
-      const experience = ensureArray(await experienceRes.json());
+      const testimonials = ensureArray(testimonialsRes);
+      const projects = ensureArray(projectsRes);
+      const experience = ensureArray(experienceRes);
 
       setStats({
         testimonials: {
@@ -68,14 +105,19 @@ export default function AdminDashboard() {
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
+      toast({
+        title: "Dashboard data unavailable",
+        description: error.message || "The admin backend is unavailable right now.",
+        variant: "destructive",
+      });
     }
   };
 
   const fetchRecentActivity = async () => {
     try {
-      const testimonials = ensureArray(await fetch('/api/admin/testimonials').then(res => res.json()));
-      const projects = ensureArray(await fetch('/api/admin/projects').then(res => res.json()));
-      const experience = ensureArray(await fetch('/api/admin/experience').then(res => res.json()));
+      const testimonials = ensureArray(await fetchAdminJson('/api/admin/testimonials'));
+      const projects = ensureArray(await fetchAdminJson('/api/admin/projects'));
+      const experience = ensureArray(await fetchAdminJson('/api/admin/experience'));
 
       const activities = [
         ...testimonials.map(t => ({
@@ -167,6 +209,21 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-5 sm:space-y-6">
+      {backendUnavailable ? (
+        <Card className="border-destructive/30 bg-destructive/5">
+          <CardContent className="pt-6">
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold">Admin backend unavailable</h2>
+              <p className="text-sm text-muted-foreground">
+                The dashboard can&apos;t reach the database yet. In local development, make sure your
+                `DATABASE_HOST`, `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD`, and
+                `DATABASE_PORT` variables are set and that Postgres is running.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
+
       {/* Page Header */}
       <div className="glass-panel chrome-stroke micro-reveal rounded-3xl p-5 sm:p-7 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
