@@ -86,7 +86,7 @@ httpRoute:
   # -- List of rules and filters
   rules:
     - backendRefs:
-        - name: frontend-service
+        - name: portfolio-helm
           port: 80
 
 # -- Database configuration (CNPG)
