@@ -1,5 +1,11 @@
 import { NextResponse } from 'next/server';
-import { validateAdminCredentials, generateSessionToken, addActiveSession, removeActiveSession } from '@/lib/admin';
+import {
+  validateAdminCredentials,
+  generateSessionToken,
+  addActiveSession,
+  removeActiveSession,
+  getAdminAuthConfigStatus
+} from '@/lib/admin';
 import { applyCorsHeaders, createPreflightResponse } from '@/lib/cors';
 import { initializeDatabase } from '@/lib/database';
 
@@ -25,11 +31,19 @@ export async function POST(request) {
       ));
     }
 
+    const authConfig = getAdminAuthConfigStatus();
+    if (!authConfig.isReady) {
+      return applyCorsHeaders(NextResponse.json(
+        { error: 'Admin auth is not configured. Check ADMIN_USERNAME, ADMIN_PASSWORD, and ADMIN_SESSION_SECRET.' },
+        { status: 503 }
+      ));
+    }
+
     const isValid = validateAdminCredentials(username, password);
 
     if (!isValid) {
       return applyCorsHeaders(NextResponse.json(
-        { error: 'Invalid credentials or missing admin environment configuration' },
+        { error: 'Invalid credentials' },
         { status: 401 }
       ));
     }

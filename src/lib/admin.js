@@ -2,17 +2,40 @@
 
 import crypto from 'crypto';
 
-// Admin credentials from environment variables
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET;
 const SESSION_TTL_SECONDS = parseInt(process.env.ADMIN_SESSION_TTL_SECONDS || '604800', 10); // 7 days
 
+function normalizeEnv(value) {
+  if (typeof value !== 'string') return '';
+  return value.trim();
+}
+
+function getAdminUsername() {
+  return normalizeEnv(process.env.ADMIN_USERNAME);
+}
+
+function getAdminPassword() {
+  return normalizeEnv(process.env.ADMIN_PASSWORD);
+}
+
 function getSessionSecret() {
-  if (!SESSION_SECRET || SESSION_SECRET.length < 16) {
+  const secret = normalizeEnv(process.env.ADMIN_SESSION_SECRET);
+  if (!secret || secret.length < 16) {
     return null;
   }
-  return SESSION_SECRET;
+  return secret;
+}
+
+export function getAdminAuthConfigStatus() {
+  const username = getAdminUsername();
+  const password = getAdminPassword();
+  const sessionSecret = getSessionSecret();
+
+  return {
+    hasUsername: Boolean(username),
+    hasPassword: Boolean(password),
+    hasSessionSecret: Boolean(sessionSecret),
+    isReady: Boolean(username && password && sessionSecret),
+  };
 }
 
 function sign(value) {
@@ -35,9 +58,12 @@ function decodePayload(encoded) {
 
 // Generate a signed session token with expiry
 export function generateSessionToken() {
+  const username = getAdminUsername();
+  if (!username) return null;
+
   const now = Math.floor(Date.now() / 1000);
   const payload = {
-    sub: ADMIN_USERNAME,
+    sub: username,
     iat: now,
     exp: now + SESSION_TTL_SECONDS,
     nonce: crypto.randomBytes(16).toString('hex'),
@@ -50,23 +76,36 @@ export function generateSessionToken() {
 
 // Hash password for comparison
 export function hashPassword(password) {
-  return crypto.createHash('sha256').update(password + SESSION_SECRET).digest('hex');
+  const secret = getSessionSecret();
+  if (!secret) return null;
+  return crypto.createHash('sha256').update(password + secret).digest('hex');
 }
 
 // Validate admin credentials
 export function validateAdminCredentials(username, password) {
-  if (!ADMIN_USERNAME || !ADMIN_PASSWORD || !getSessionSecret()) {
+  const adminUsername = getAdminUsername();
+  const adminPassword = getAdminPassword();
+  const secret = getSessionSecret();
+  if (!adminUsername || !adminPassword || !secret) {
     return false;
   }
 
   const hashedPassword = hashPassword(password);
-  const expectedHash = hashPassword(ADMIN_PASSWORD);
-  
-  return username === ADMIN_USERNAME && hashedPassword === expectedHash;
+  const expectedHash = hashPassword(adminPassword);
+  if (!hashedPassword || !expectedHash) {
+    return false;
+  }
+
+  return username === adminUsername && hashedPassword === expectedHash;
 }
 
 // Check if session is valid
 export function isValidSession(sessionToken) {
+  const adminUsername = getAdminUsername();
+  if (!adminUsername) {
+    return false;
+  }
+
   if (typeof sessionToken !== 'string' || !sessionToken.includes('.')) {
     return false;
   }
@@ -91,7 +130,7 @@ export function isValidSession(sessionToken) {
   }
 
   const payload = decodePayload(encoded);
-  if (!payload || payload.sub !== ADMIN_USERNAME || !payload.exp) {
+  if (!payload || payload.sub !== adminUsername || !payload.exp) {
     return false;
   }
 
