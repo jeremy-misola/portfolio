@@ -85,7 +85,7 @@ jobs:
           if [[ -n "${{ github.event.inputs.tag }}" ]]; then
             APP_VERSION="${{ github.event.inputs.tag }}"
           else
-            APP_VERSION="$SHORT_SHA"
+            APP_VERSION="sha-$SHORT_SHA"
           fi
           echo "app_version=$APP_VERSION" >> "$GITHUB_OUTPUT"
 
