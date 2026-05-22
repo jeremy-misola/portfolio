@@ -21,6 +21,7 @@ concurrency:
 
 env:
   DOCKER_IMAGE: jurassicjey/portfolio
+  HELM_OCI_NAMESPACE: jurassicjey
   HELM_CHART_PATH: ./portfolio-helm
   HELM_CHART_NAME: portfolio-helm
 
@@ -61,19 +62,6 @@ jobs:
           tags: |
             type=sha,format=short
             type=raw,value=${{ github.event.inputs.tag }},enable=${{ github.event.inputs.tag != '' }}
-
-      # --- Build & push Docker image ----------------------------------------
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          platforms: linux/amd64,linux/arm64
 
       # --- Package & push Helm chart as OCI artifact -----------------------
 
@@ -128,4 +116,17 @@ jobs:
       - name: Push Helm chart to DockerHub (OCI)
         run: |
           helm push ./.chart-package/${{ env.HELM_CHART_NAME }}-*.tgz \
-            oci://registry-1.docker.io/${{ env.DOCKER_IMAGE }}
+            oci://registry-1.docker.io/${{ env.HELM_OCI_NAMESPACE }}
+
+      # --- Build & push Docker image ----------------------------------------
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
