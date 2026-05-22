@@ -26,7 +26,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
-import { useAdminAuth } from '@/hooks/useAdminAuth';
 
 const AdminLayout = ({ children }) => {
   const router = useRouter();
@@ -35,17 +34,9 @@ const AdminLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
-  const { isAuthenticated, isLoading } = useAdminAuth();
 
   const pathname = usePathname();
   const isLoginPage = pathname.includes('/dashboard/login');
-
-  // Redirect to login if not authenticated and not already on login page
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated && !pathname.includes('/dashboard/login')) {
-      router.push('/dashboard/login');
-    }
-  }, [isAuthenticated, isLoading, router, pathname]);
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },

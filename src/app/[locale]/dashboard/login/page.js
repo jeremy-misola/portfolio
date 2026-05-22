@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useRouter, usePathname } from '@/i18n/routing';
+import { usePathname } from '@/i18n/routing';
 import { motion } from 'framer-motion';
 import { Shield, Mail, Lock, Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/components/ui/use-toast";
 
 export default function AdminLogin() {
-  const router = useRouter();
   const pathname = usePathname();
   const locale = pathname.split('/')[1]; // Extract current locale from path
   const { toast } = useToast();
@@ -41,7 +40,7 @@ export default function AdminLogin() {
             title: "Login successful",
             description: "Welcome to the dashboard!",
           });
-          router.push('/dashboard');
+          window.location.assign(`/${locale}/dashboard`);
         } else {
         toast({
           title: "Login failed",
